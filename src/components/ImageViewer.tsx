@@ -108,11 +108,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({ image, onClose }) => {
         />
       </div>
 
-      {image.isAiGenerated && (
-        <div className="pt-2 text-center text-[11px] tracking-wider text-amber-200/90 font-medium">
-          AI-GENERATED ILLUSTRATION — REFERENCE OF TRADITIONAL COSTUME FEATURES
-        </div>
-      )}
+
     </div>
   );
 };

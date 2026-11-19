@@ -169,8 +169,8 @@ export const AboutView: React.FC<AboutViewProps> = ({ onExploreAll }) => {
             </ul>
             <p className="mt-4 pt-3 border-t border-slate-900/8 text-[11px] text-slate-500 leading-relaxed">
               {language === 'vi'
-                ? 'Ghi chú về hình ảnh: Hình ảnh 3D AI trong các mục Trang phục và Không gian văn hóa được mô phỏng dựa trên tư liệu hiện vật, màu sắc và hoa văn chính thống để phục vụ trải nghiệm học tập.'
-                : 'Note on illustrations: The 3D AI illustrations in the Traditional Costumes and Cultural Spaces sections are crafted based on documented styles, colours, and decorative patterns to support visual learning.'}
+                ? 'Ghi chú về hình ảnh: Hình ảnh trong mục Trang phục và Không gian văn hóa được tổng hợp từ tư liệu hiện vật bảo tàng, ảnh chụp trang phục truyền thống của đồng bào 54 dân tộc phục vụ trải nghiệm học tập.'
+                : 'Note on illustrations: Images in the Traditional Costumes and Cultural Spaces sections are gathered from museum collections and documented traditional costume archives to support visual learning.'}
             </p>
           </div>
         </section>

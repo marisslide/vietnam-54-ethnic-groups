@@ -336,9 +336,6 @@ export const CostumeExhibitionPlate: React.FC<CostumePlaceholderProps> = ({ grou
             ))}
           </div>
         </div>
-        <p className="text-[11px] text-center text-slate-500 leading-snug line-clamp-2 px-2">
-          Click below to generate a 3D AI character based on the cultural heritage of the {group.name} people.
-        </p>
       </div>
     </div>
   );

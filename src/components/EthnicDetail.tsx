@@ -8,19 +8,12 @@ import {
   Sprout,
   Music,
   Shirt,
-  Sparkles,
   ZoomIn,
-  RefreshCw,
-  AlertCircle,
   BookOpen,
 } from 'lucide-react';
 import { EthnicGroup, ImageSlot, LightboxImage } from '../types/ethnic';
-import { getEthnicGroups, getRegionById } from '../data/ethnicGroups';
-import {
-  generateEthnicImage,
-  ImageGenerationError,
-  lookupExistingImage,
-} from '../services/geminiImageService';
+import { getEthnicGroups } from '../data/ethnicGroups';
+import { lookupExistingImage } from '../services/geminiImageService';
 import { CulturalIcon, EthnicMotifPattern } from './CulturalIcon';
 import { CostumeGallery } from './CostumeGallery';
 import { useLanguage } from '../context/LanguageContext';
@@ -39,7 +32,7 @@ interface ExhibitionMediaBoxProps {
   slot: Exclude<ImageSlot, 'maleCostume' | 'femaleCostume'>;
   title: string;
   caption: string;
-  prompt: string;
+  prompt?: string;
   staticUrl?: string;
   onZoomImage: (image: LightboxImage) => void;
 }
@@ -49,19 +42,14 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
   slot,
   title,
   caption,
-  prompt,
   staticUrl,
   onZoomImage,
 }) => {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const [imageUrl, setImageUrl] = useState<string | null>(staticUrl || null);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
-    setErrorMsg(null);
-    setLoading(false);
     setImageUrl(staticUrl || null);
 
     lookupExistingImage(group.id, slot, staticUrl || undefined).then((found) => {
@@ -75,49 +63,10 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
     };
   }, [group.id, slot, staticUrl]);
 
-  const handleGenerate = async (forceRegenerate = false) => {
-    setLoading(true);
-    setErrorMsg(null);
-    try {
-      const result = await generateEthnicImage({
-        ethnicId: group.id,
-        slot,
-        prompt,
-        aspectRatio: '16:9',
-        forceRegenerate,
-      });
-      setImageUrl(result.imageUrl);
-    } catch (err) {
-      if (err instanceof ImageGenerationError) {
-        setErrorMsg(err.message);
-      } else {
-        setErrorMsg(
-          language === 'vi'
-            ? 'Không thể tạo hình ảnh 3D AI lúc này. Vui lòng thử lại sau.'
-            : 'Unable to generate the 3D AI illustration right now. Please try again.'
-        );
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const primaryRegionInfo = group.regionIds[0] ? getRegionById(group.regionIds[0], language) : undefined;
-
   return (
     <div className="museum-card overflow-hidden">
       <div className="relative w-full aspect-[21/9] min-h-[190px] max-h-[300px] overflow-hidden bg-[#FFF9EA]">
-        {loading ? (
-          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-r from-[#FFF9EA] via-white to-teal-50">
-            <Sparkles className="w-8 h-8 text-[#15B8A6] animate-pulse mb-2" />
-            <p className="font-display font-bold text-sm text-slate-800">
-              {t('aiGenerating')}
-            </p>
-            <p className="mt-1 text-xs text-slate-500">
-              {t('aiCacheNote')}
-            </p>
-          </div>
-        ) : imageUrl ? (
+        {imageUrl ? (
           <div className="relative w-full h-full group">
             <img
               src={imageUrl}
@@ -127,7 +76,7 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
                   src: imageUrl,
                   title: `${title} — ${group.name}`,
                   subtitle: caption,
-                  isAiGenerated: true,
+                  isAiGenerated: false,
                 })
               }
               className="w-full h-full object-cover cursor-zoom-in group-hover:scale-[1.03] transition-transform duration-500"
@@ -145,7 +94,7 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
                     src: imageUrl,
                     title: `${title} — ${group.name}`,
                     subtitle: caption,
-                    isAiGenerated: true,
+                    isAiGenerated: false,
                   })
                 }
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-950/70 hover:bg-slate-950/90 text-white text-xs font-semibold backdrop-blur-xs cursor-pointer"
@@ -153,19 +102,10 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
                 <ZoomIn className="w-3.5 h-3.5" />
                 <span>{t('btnEnlarge')}</span>
               </button>
-              <button
-                type="button"
-                onClick={() => handleGenerate(true)}
-                className="p-1.5 rounded-lg bg-slate-950/70 hover:bg-slate-950/90 text-white backdrop-blur-xs cursor-pointer"
-                title={t('btnRegenerate')}
-                aria-label={t('btnRegenerate')}
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-              </button>
             </div>
           </div>
         ) : (
-          /* Culturally tailored museum plate before on-demand AI generation */
+          /* Culturally tailored museum plate */
           <div
             className="relative w-full h-full flex items-center justify-between gap-5 px-5 sm:px-7 py-5"
             style={{
@@ -203,53 +143,9 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
                 </p>
               </div>
             </div>
-
-            <div className="relative z-10 flex flex-col items-end gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={() => handleGenerate(false)}
-                disabled={loading}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#15B8A6] hover:bg-[#119e8e] disabled:opacity-60 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors whitespace-nowrap cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>{t('aiGenerateBtn')}</span>
-              </button>
-              {primaryRegionInfo && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    onZoomImage({
-                      src: primaryRegionInfo.dioramaImage,
-                      title: primaryRegionInfo.name,
-                      subtitle: `${group.name}`,
-                    })
-                  }
-                  className="text-[11px] font-semibold text-slate-600 hover:text-[#0F766E] underline underline-offset-2 cursor-pointer"
-                >
-                  {t('viewLandscapeLink')} {primaryRegionInfo.shortName}
-                </button>
-              )}
-            </div>
           </div>
         )}
       </div>
-
-      {errorMsg && (
-        <div className="px-4 py-2.5 bg-amber-50 border-t border-amber-200 flex items-center justify-between gap-3">
-          <div className="flex items-start gap-2 text-xs text-amber-900">
-            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <span>{errorMsg}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => handleGenerate(false)}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold whitespace-nowrap shrink-0 cursor-pointer"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>{language === 'vi' ? 'Thử lại' : 'Retry'}</span>
-          </button>
-        </div>
-      )}
     </div>
   );
 };

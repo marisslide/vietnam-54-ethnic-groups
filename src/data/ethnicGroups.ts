@@ -150,6 +150,16 @@ function buildOrderedEthnicGroups(rawList: EthnicGroup[]): EthnicGroup[] {
         ...group,
         number: index + 1,
         avatarUrl: ETHNIC_AVATAR_MAP[id] || group.avatarUrl,
+        costumes: {
+          male: {
+            ...group.costumes.male,
+            imageUrl: `/images/costumes/${id}-male.jpg`,
+          },
+          female: {
+            ...group.costumes.female,
+            imageUrl: `/images/costumes/${id}-female.jpg`,
+          },
+        },
       });
       map.delete(id);
     }
@@ -163,6 +173,16 @@ function buildOrderedEthnicGroups(rawList: EthnicGroup[]): EthnicGroup[] {
         ...group,
         number: nextNumber++,
         avatarUrl: ETHNIC_AVATAR_MAP[group.id] || group.avatarUrl,
+        costumes: {
+          male: {
+            ...group.costumes.male,
+            imageUrl: `/images/costumes/${group.id}-male.jpg`,
+          },
+          female: {
+            ...group.costumes.female,
+            imageUrl: `/images/costumes/${group.id}-female.jpg`,
+          },
+        },
       });
       map.delete(group.id);
     }
