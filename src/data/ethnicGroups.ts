@@ -65,9 +65,18 @@ export const ETHNIC_AVATAR_MAP: Record<string, string> = {
   ma: '/images/avatars/ma.jpg', // 43
   mnong: '/images/avatars/mnong.jpg', // 44
   'ro-mam': '/images/avatars/ro-mam.jpg', // 45
+  'xo-dang': '/images/avatars/xo-dang.jpg', // 46
+  'ba-na': '/images/avatars/ba-na.jpg', // 47
+  'gie-trieng': '/images/avatars/gie-trieng.jpg', // 48
+  hre: '/images/avatars/hre.jpg', // 49
+  'cho-ro': '/images/avatars/cho-ro.jpg', // 50
+  xtieng: '/images/avatars/xtieng.jpg', // 51
+  'kho-me': '/images/avatars/kho-me.jpg', // 52
+  hoa: '/images/avatars/hoa.jpg', // 53
+  cham: '/images/avatars/cham.jpg', // 54
 };
 
-// Priority ordering matching user's avatar card numbers (01/54 -> 45/54)
+// Priority ordering matching user's avatar card numbers (01/54 -> 54/54)
 export const ORDERED_ETHNIC_IDS: string[] = [
   'cong', // 01/54
   'ha-nhi', // 02/54
@@ -114,6 +123,15 @@ export const ORDERED_ETHNIC_IDS: string[] = [
   'ma', // 43/54
   'mnong', // 44/54
   'ro-mam', // 45/54
+  'xo-dang', // 46/54
+  'ba-na', // 47/54
+  'gie-trieng', // 48/54
+  'hre', // 49/54
+  'cho-ro', // 50/54
+  'xtieng', // 51/54
+  'kho-me', // 52/54
+  'hoa', // 53/54
+  'cham', // 54/54
 ];
 
 function buildOrderedEthnicGroups(rawList: EthnicGroup[]): EthnicGroup[] {
