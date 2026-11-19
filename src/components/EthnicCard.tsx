@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { EthnicGroup } from '../types/ethnic';
 import { CulturalIcon, EthnicMotifPattern } from './CulturalIcon';
+import { useLanguage } from '../context/LanguageContext';
 
 interface EthnicCardProps {
   group: EthnicGroup;
@@ -9,7 +10,8 @@ interface EthnicCardProps {
 }
 
 export const EthnicCard: React.FC<EthnicCardProps> = ({ group, onSelect }) => {
-  const primaryRegion = group.traditionalRegions[0] || 'Vietnam';
+  const { language } = useLanguage();
+  const primaryRegion = group.traditionalRegions[0] || (language === 'vi' ? 'Việt Nam' : 'Vietnam');
   // Only show a real photographic/3D costume preview if the ethnic group owns its own authentic imageUrl
   const authenticPreview = group.costumes.female.imageUrl || group.costumes.male.imageUrl;
 
@@ -84,7 +86,7 @@ export const EthnicCard: React.FC<EthnicCardProps> = ({ group, onSelect }) => {
             className="tracking-wide uppercase"
             style={{ color: group.accentColor }}
           >
-            Explore
+            {language === 'vi' ? 'Khám phá' : 'Explore'}
           </span>
           <ArrowUpRight
             className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#15B8A6] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"

@@ -2,6 +2,7 @@ import React from 'react';
 import { SearchX, RotateCcw } from 'lucide-react';
 import { EthnicGroup } from '../types/ethnic';
 import { EthnicCard } from './EthnicCard';
+import { useLanguage } from '../context/LanguageContext';
 
 interface EthnicGridProps {
   groups: EthnicGroup[];
@@ -16,15 +17,17 @@ export const EthnicGrid: React.FC<EthnicGridProps> = ({
   onResetFilters,
   fullWidth = false,
 }) => {
+  const { t } = useLanguage();
+
   if (groups.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center text-center py-14 px-6 rounded-2xl bg-white/80 border border-slate-900/8">
         <SearchX className="w-11 h-11 text-slate-400 mb-3" />
         <h3 className="font-display font-bold text-base text-slate-800">
-          No matching ethnic groups found
+          {t('noMatchTitle')}
         </h3>
         <p className="mt-1 text-sm text-slate-500 max-w-md">
-          Try searching with another name or reset the region and language family filters to view all 54 ethnic groups of Vietnam.
+          {t('noMatchDesc')}
         </p>
         <button
           type="button"
@@ -32,7 +35,7 @@ export const EthnicGrid: React.FC<EthnicGridProps> = ({
           className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#15B8A6] hover:bg-[#119e8e] text-white text-sm font-bold transition-colors cursor-pointer"
         >
           <RotateCcw className="w-4 h-4" />
-          <span>View all 54 ethnic groups</span>
+          <span>{t('aboutExploreAllBtn')}</span>
         </button>
       </div>
     );

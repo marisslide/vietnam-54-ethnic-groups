@@ -8,8 +8,10 @@ import { HomePage } from './components/HomePage';
 import { EthnicDetail } from './components/EthnicDetail';
 import { AboutView } from './components/AboutView';
 import { ImageViewer } from './components/ImageViewer';
+import { useLanguage } from './context/LanguageContext';
 
 export default function App() {
+  const { language } = useLanguage();
   const [currentView, setCurrentView] = useState<AppView>('intro');
   const [selectedEthnicId, setSelectedEthnicId] = useState<string>('kinh');
   const [previousListView, setPreviousListView] = useState<'home' | 'map' | 'catalog'>('home');
@@ -165,7 +167,7 @@ export default function App() {
     setActiveLanguageFamily(null);
   };
 
-  const selectedEthnic = getEthnicById(selectedEthnicId);
+  const selectedEthnic = getEthnicById(selectedEthnicId, language);
 
   return (
     <div className="museum-viewport bg-[#FFF9EA] text-slate-900">

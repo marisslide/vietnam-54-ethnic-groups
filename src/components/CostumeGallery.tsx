@@ -7,6 +7,7 @@ import {
   lookupExistingImage,
 } from '../services/geminiImageService';
 import { CostumeExhibitionPlate } from './CulturalIcon';
+import { useLanguage } from '../context/LanguageContext';
 
 interface CostumeGalleryProps {
   group: EthnicGroup;
@@ -20,10 +21,11 @@ interface CostumeColumnProps {
 }
 
 const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImage }) => {
+  const { language, t } = useLanguage();
   const costume = group.costumes[gender];
   const slot: ImageSlot = gender === 'male' ? 'maleCostume' : 'femaleCostume';
-  const heading = gender === 'male' ? 'MALE ATTIRE' : 'FEMALE ATTIRE';
-  const genderLabel = gender === 'male' ? "men's" : "women's";
+  const heading = gender === 'male' ? t('costumeMaleHeading') : t('costumeFemaleHeading');
+  const genderSub = gender === 'male' ? t('costumeMaleSub') : t('costumeFemaleSub');
 
   const [imageUrl, setImageUrl] = useState<string | null>(costume.imageUrl || null);
   const [loading, setLoading] = useState(false);
@@ -62,7 +64,11 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
       if (err instanceof ImageGenerationError) {
         setErrorMsg(err.message);
       } else {
-        setErrorMsg('Unable to generate the 3D AI illustration right now. Please try again.');
+        setErrorMsg(
+          language === 'vi'
+            ? 'Không thể tạo hình ảnh 3D AI lúc này. Vui lòng thử lại sau.'
+            : 'Unable to generate the 3D AI illustration right now. Please try again.'
+        );
       }
     } finally {
       setLoading(false);
@@ -78,7 +84,7 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
             {heading}
           </h3>
           <p className="text-xs text-slate-500">
-            The {group.name} People · Traditional {genderLabel} attire
+            {group.name} · {genderSub}
           </p>
         </div>
 
@@ -102,10 +108,10 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
               <Sparkles className="w-8 h-8 text-[#15B8A6]" />
             </div>
             <p className="font-display font-bold text-sm text-slate-800">
-              Creating 3D illustration of traditional {genderLabel} costume for the {group.name} people...
+              {t('aiGenerating')}
             </p>
             <p className="mt-1 text-xs text-slate-500 max-w-xs">
-              The system is recreating the authentic silhouette, colour palette, and traditional patterns.
+              {t('aiCacheNote')}
             </p>
             <div className="mt-4 w-48 h-2 rounded-full bg-slate-200 overflow-hidden">
               <div className="h-full w-2/3 bg-gradient-to-r from-[#15B8A6] to-[#FFC83D] rounded-full animate-pulse" />
@@ -115,11 +121,11 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
           <div className="relative w-full h-full group bg-gradient-to-b from-[#FFFDF7] to-[#F7F1E1]">
             <img
               src={imageUrl}
-              alt={`Traditional ${genderLabel} attire of the ${group.name} people`}
+              alt={`${heading} — ${group.name}`}
               onClick={() =>
                 onZoomImage({
                   src: imageUrl,
-                  title: `${heading} — The ${group.name} People`,
+                  title: `${heading} — ${group.name}`,
                   subtitle: costume.mainColors,
                   isAiGenerated: true,
                 })
@@ -132,24 +138,24 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
                 onClick={() =>
                   onZoomImage({
                     src: imageUrl,
-                    title: `${heading} — The ${group.name} People`,
+                    title: `${heading} — ${group.name}`,
                     subtitle: costume.mainColors,
                     isAiGenerated: true,
                   })
                 }
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-950/70 hover:bg-slate-950/90 text-white text-xs font-semibold backdrop-blur-xs transition-colors cursor-pointer"
-                aria-label="Enlarge costume image"
+                aria-label={t('btnEnlarge')}
               >
                 <ZoomIn className="w-3.5 h-3.5" />
-                <span>Enlarge</span>
+                <span>{t('btnEnlarge')}</span>
               </button>
               {!costume.imageUrl && (
                 <button
                   type="button"
                   onClick={() => handleGenerate(true)}
                   className="p-1.5 rounded-lg bg-slate-950/70 hover:bg-slate-950/90 text-white backdrop-blur-xs transition-colors cursor-pointer"
-                  title="Regenerate AI illustration"
-                  aria-label="Regenerate AI illustration"
+                  title={t('btnRegenerate')}
+                  aria-label={t('btnRegenerate')}
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                 </button>
@@ -168,14 +174,20 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
       {/* Action / Disclaimer Strip */}
       <div className="px-4 py-2.5 bg-[#FFFDF7] border-b border-slate-900/8 flex flex-wrap items-center justify-between gap-2">
         {imageUrl ? (
-          <p className="text-[10.5px] tracking-wide font-semibold text-amber-800/90">
-            AI-GENERATED ILLUSTRATION — REFERENCE OF TRADITIONAL COSTUME FEATURES
+          <p className="text-[10.5px] tracking-wide font-semibold text-amber-800/90 uppercase">
+            {language === 'vi'
+              ? 'MINH HỌA 3D AI — THAM KHẢO ĐẶC TRƯNG TRANG PHỤC TRUYỀN THỐNG'
+              : 'AI-GENERATED ILLUSTRATION — REFERENCE OF TRADITIONAL COSTUME FEATURES'}
           </p>
         ) : (
           <div className="w-full flex flex-wrap items-center justify-between gap-2">
             <span className="text-[11px] font-medium text-slate-500 flex items-center gap-1.5">
               <Palette className="w-3.5 h-3.5 text-[#15B8A6]" />
-              <span>Traditional colour palette & silhouette</span>
+              <span>
+                {language === 'vi'
+                  ? 'Bảng màu & kiểu dáng trang phục truyền thống'
+                  : 'Traditional colour palette & silhouette'}
+              </span>
             </span>
             <button
               type="button"
@@ -184,7 +196,7 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#15B8A6] hover:bg-[#119e8e] disabled:opacity-60 text-white text-xs font-bold transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Generate 3D AI Image</span>
+              <span>{t('aiGenerateBtn')}</span>
             </button>
           </div>
         )}
@@ -202,8 +214,8 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
             onClick={() => handleGenerate(false)}
             className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold whitespace-nowrap shrink-0 cursor-pointer"
           >
-            <RefreshCw className="w-3 h-3" />
-            <span>Retry</span>
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>{language === 'vi' ? 'Thử lại' : 'Retry'}</span>
           </button>
         </div>
       )}
@@ -212,7 +224,7 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
       <div className="p-4 lg:p-5 space-y-3 text-sm bg-white flex-1">
         <div>
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Costume Style & Structure
+            {t('costumeDescLabel')}
           </h4>
           <p className="mt-1 text-slate-800 leading-relaxed">{costume.description}</p>
         </div>
@@ -220,13 +232,13 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-900/6">
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Main Colours
+              {t('costumeColorsLabel')}
             </h4>
             <p className="mt-0.5 text-slate-700 leading-relaxed">{costume.mainColors}</p>
           </div>
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Traditional Materials
+              {t('costumeMaterialsLabel')}
             </h4>
             <p className="mt-0.5 text-slate-700 leading-relaxed">{costume.materials}</p>
           </div>
@@ -234,28 +246,28 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
 
         <div className="pt-2 border-t border-slate-900/6">
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Characteristic Patterns
+            {t('costumePatternsLabel')}
           </h4>
           <p className="mt-0.5 text-slate-700 leading-relaxed">{costume.patterns}</p>
         </div>
 
         <div className="pt-2 border-t border-slate-900/6">
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Accessories & Jewellery
+            {t('costumeAccessoriesLabel')}
           </h4>
           <p className="mt-0.5 text-slate-700 leading-relaxed">{costume.accessories}</p>
         </div>
 
         <div className="pt-2 border-t border-slate-900/6">
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Cultural Significance
+            {t('costumeMeaningLabel')}
           </h4>
           <p className="mt-0.5 text-slate-700 leading-relaxed">{costume.culturalMeaning}</p>
         </div>
 
         {costume.variantNote && (
           <p className="pt-2 border-t border-slate-900/6 text-xs text-slate-500 italic leading-relaxed">
-            Variant notes: {costume.variantNote}
+            {t('costumeVariantLabel')}: {costume.variantNote}
           </p>
         )}
       </div>
@@ -264,15 +276,21 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
 };
 
 export const CostumeGallery: React.FC<CostumeGalleryProps> = ({ group, onZoomImage }) => {
+  const { language } = useLanguage();
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <h2 className="font-display font-extrabold type-section text-slate-900">
-            Traditional Costumes of the {group.name} People
+            {language === 'vi'
+              ? `Trang phục truyền thống Dân tộc ${group.name}`
+              : `Traditional Costumes of the ${group.name} People`}
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Side-by-side display of male and female attire highlighting the distinct colour palettes, woven motifs, and authentic accessories of the {group.name} community.
+            {language === 'vi'
+              ? `Trưng bày song song trang phục nam và nữ, thể hiện sắc thái văn hóa, hoa văn dệt và phụ kiện đặc trưng của cộng đồng người ${group.name}.`
+              : `Side-by-side display of male and female attire highlighting the distinct colour palettes, woven motifs, and authentic accessories of the ${group.name} community.`}
           </p>
         </div>
       </div>

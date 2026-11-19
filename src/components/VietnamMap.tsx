@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ZoomIn, MapPin, RotateCcw } from 'lucide-react';
 import { LightboxImage, RegionId } from '../types/ethnic';
-import { REGIONS, countGroupsInRegion, getRegionById } from '../data/ethnicGroups';
+import { getRegions, countGroupsInRegion, getRegionById } from '../data/ethnicGroups';
+import { useLanguage } from '../context/LanguageContext';
 
 interface VietnamMapProps {
   activeRegion: RegionId | null;
@@ -69,25 +70,25 @@ const REGION_SHAPES: RegionShapeDef[] = [
   },
   {
     id: 'tay-nguyen',
-    path: 'M 186 240 C 200 240, 216 250, 228 272 C 238 298, 238 336, 228 368 C 214 378, 194 376, 184 362 C 176 334, 174 294, 180 264 C 182 254, 184 246, 186 240 Z',
-    labelX: 204,
+    path: 'M 186 240 C 200 244, 214 248, 224 264 C 234 286, 240 318, 234 352 C 224 378, 208 386, 194 380 C 182 366, 174 344, 174 318 C 174 290, 178 262, 186 240 Z',
+    labelX: 206,
     labelY: 312,
     pinX: 204,
-    pinY: 310,
+    pinY: 316,
     fill: '#E11D48',
-    hoverFill: '#be123c',
-    landmarkLabel: 'Rong Houses · Gongs',
+    hoverFill: '#c7133b',
+    landmarkLabel: 'Nha Rong · Gong Culture',
   },
   {
     id: 'nam-bo',
-    path: 'M 184 362 C 198 372, 222 376, 246 388 C 234 416, 212 436, 186 452 C 166 464, 148 482, 134 494 C 122 486, 118 468, 126 450 C 118 438, 112 422, 126 408 C 144 396, 166 382, 184 362 Z',
-    labelX: 168,
+    path: 'M 194 380 C 208 386, 224 378, 242 396 C 256 390, 260 412, 252 432 C 238 456, 204 476, 176 478 C 146 474, 134 446, 146 422 C 160 398, 178 386, 194 380 Z',
+    labelX: 198,
     labelY: 432,
-    pinX: 166,
-    pinY: 428,
+    pinX: 196,
+    pinY: 436,
     fill: '#3D9BE9',
-    hoverFill: '#247ec9',
-    landmarkLabel: 'Khmer Pagodas · River Boats',
+    hoverFill: '#227fc9',
+    landmarkLabel: 'Floating Markets · Khmer Pagodas',
   },
 ];
 
@@ -97,11 +98,13 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
   onZoomImage,
   expanded = false,
 }) => {
+  const { language, t } = useLanguage();
   const [hoveredRegion, setHoveredRegion] = useState<RegionId | null>(null);
 
-  const focusedRegionId = hoveredRegion ?? activeRegion;
-  const focusedRegionInfo = focusedRegionId ? getRegionById(focusedRegionId) : null;
-  const focusedCount = focusedRegionId ? countGroupsInRegion(focusedRegionId) : 54;
+  const regions = useMemo(() => getRegions(language), [language]);
+
+  const focusedRegionId = hoveredRegion || activeRegion;
+  const focusedRegionInfo = focusedRegionId ? getRegionById(focusedRegionId, language) : null;
 
   const handleRegionClick = (id: RegionId) => {
     if (activeRegion === id) {
@@ -112,16 +115,16 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
   };
 
   return (
-    <div className="h-full flex flex-col gap-3 min-h-0">
-      {/* Map Header */}
-      <div className="flex items-center justify-between gap-2 shrink-0">
+    <div className="w-full h-full flex flex-col gap-3 min-h-0">
+      {/* Map Header & Title */}
+      <div className="shrink-0 flex items-center justify-between gap-2 border-b border-slate-900/8 pb-2.5">
         <div>
-          <h2 className="font-display font-extrabold text-sm sm:text-base lg:text-lg text-slate-900 flex items-center gap-2">
+          <h2 className="font-display font-extrabold text-sm sm:text-base text-slate-900 flex items-center gap-1.5">
             <MapPin className="w-4 h-4 text-[#15B8A6] shrink-0" />
-            <span>Cultural Map of Vietnam</span>
+            <span>{t('mapTitle')}</span>
           </h2>
           <p className="text-xs text-slate-500">
-            Click on any region to discover its traditional ethnic communities
+            {t('mapInstruction')}
           </p>
         </div>
 
@@ -132,7 +135,7 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
             className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span>All 6 Regions</span>
+            <span>{t('allOption')}</span>
           </button>
         )}
       </div>
@@ -153,12 +156,12 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
               'radial-gradient(circle at 38% 30%, #E8F8FA 0%, #D4F0F7 52%, #C3E7F5 100%)',
           }}
         >
-          {/* Decorative ocean latitude/longitude curves */}
+          {/* Decorative ocean curves */}
           <svg
             viewBox="0 0 360 520"
             className="w-full h-full max-h-[540px] select-none"
             role="img"
-            aria-label="Interactive cultural map of Vietnam's 6 regions"
+            aria-label={t('mapTitle')}
           >
             <defs>
               <filter id="vietnam-3d-shadow" x="-15%" y="-10%" width="140%" height="130%">
@@ -199,7 +202,7 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
               fillOpacity="0.65"
               letterSpacing="1.6"
             >
-              EAST SEA
+              {language === 'vi' ? 'BIỂN ĐÔNG' : 'EAST SEA'}
             </text>
 
             {/* 6 Interactive 3D Extruded Regions */}
@@ -217,138 +220,89 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
                     onMouseLeave={() => setHoveredRegion(null)}
                     className="cursor-pointer transition-all duration-200"
                     style={{
-                      transform:
-                        isSelected || isHovered ? 'translate(-2px, -3px)' : 'translate(0px, 0px)',
+                      transform: isSelected || isHovered ? 'scale(1.025)' : 'scale(1)',
+                      transformOrigin: `${shape.labelX}px ${shape.labelY}px`,
+                      opacity: isDimmed ? 0.38 : 1,
                     }}
                   >
-                    {/* Extruded 3D bottom lip */}
+                    {/* 3D Extrusion base shadow layer */}
                     <path
                       d={shape.path}
-                      transform="translate(2.5, 4.5)"
-                      fill="#0F3D3E"
-                      fillOpacity={isDimmed ? 0.14 : 0.28}
+                      fill="#0C4A57"
+                      fillOpacity={isSelected ? 0.6 : 0.35}
+                      transform="translate(3, 5)"
                     />
-                    {/* Region top surface */}
+
+                    {/* Main region polygon */}
                     <path
                       d={shape.path}
-                      fill={isSelected || isHovered ? shape.hoverFill : shape.fill}
-                      fillOpacity={isDimmed ? 0.42 : 0.96}
-                      stroke="#FFF9EA"
-                      strokeWidth={isSelected ? 3 : 2}
+                      fill={isHovered ? shape.hoverFill : shape.fill}
+                      stroke={isSelected ? '#FFFFFF' : '#FFFFFF'}
+                      strokeWidth={isSelected ? 3.5 : 1.6}
                       strokeLinejoin="round"
                     />
+
+                    {/* Interactive Pin Marker */}
+                    <g
+                      transform={`translate(${shape.pinX}, ${shape.pinY})`}
+                      filter="url(#pin-glow)"
+                    >
+                      <circle
+                        cx="0"
+                        cy="0"
+                        r={isSelected ? 7 : isHovered ? 6 : 5}
+                        fill="#FFFFFF"
+                        stroke={shape.fill}
+                        strokeWidth="2.5"
+                      />
+                      {(isSelected || isHovered) && (
+                        <circle cx="0" cy="0" r="2.5" fill={shape.fill} />
+                      )}
+                    </g>
                   </g>
                 );
               })}
             </g>
 
-            {/* Cultural Landmark Pins on Each Region */}
-            {REGION_SHAPES.map((shape) => {
-              const isSelected = activeRegion === shape.id;
-              const isHovered = hoveredRegion === shape.id;
-              const count = countGroupsInRegion(shape.id);
-
-              return (
-                <g
-                  key={`pin-${shape.id}`}
-                  transform={`translate(${shape.pinX}, ${shape.pinY})`}
-                  onClick={() => handleRegionClick(shape.id)}
-                  onMouseEnter={() => setHoveredRegion(shape.id)}
-                  onMouseLeave={() => setHoveredRegion(null)}
-                  className="cursor-pointer"
-                  filter="url(#pin-glow)"
-                >
-                  <circle
-                    cx="0"
-                    cy="0"
-                    r={isSelected || isHovered ? 14 : 11.5}
-                    fill="#FFF9EA"
-                    stroke={shape.fill}
-                    strokeWidth={isSelected ? 3 : 2}
-                  />
-                  {/* Miniature regional icon inside pin */}
-                  {shape.id === 'mien-nui-phia-bac' && (
-                    <path d="M -5 3 L 0 -5 L 5 3 Z M -3 3 V 6 M 3 3 V 6" stroke={shape.fill} strokeWidth="1.6" fill="none" strokeLinecap="round" />
-                  )}
-                  {shape.id === 'dong-bang-bac-bo' && (
-                    <path d="M 0 -5 C -3 -1 -3 2 0 4 C 3 2 3 -1 0 -5 Z M -5 1 C -3 4 3 4 5 1" stroke={shape.fill} strokeWidth="1.5" fill="none" strokeLinecap="round" />
-                  )}
-                  {shape.id === 'bac-trung-bo' && (
-                    <path d="M -6 3 L -2 -3 L 2 2 L 5 -2 L 7 3" stroke={shape.fill} strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                  )}
-                  {shape.id === 'duyen-hai-mien-trung' && (
-                    <path d="M -3 5 V -1 L 0 -5 L 3 -1 V 5 M -5 5 H 5" stroke={shape.fill} strokeWidth="1.6" fill="none" strokeLinecap="round" />
-                  )}
-                  {shape.id === 'tay-nguyen' && (
-                    <path d="M -3 -5 H 3 L 5 3 H -5 Z M -3 3 V 6 M 3 3 V 6" stroke={shape.fill} strokeWidth="1.5" fill="none" strokeLinecap="round" />
-                  )}
-                  {shape.id === 'nam-bo' && (
-                    <path d="M -6 2 H 6 L 4 5 H -4 Z M 0 -5 L 4 1 H 0 Z" stroke={shape.fill} strokeWidth="1.5" fill="none" strokeLinejoin="round" />
-                  )}
-
-                  {/* Ethnic count tag */}
-                  <g transform="translate(11, -11)">
-                    <circle cx="0" cy="0" r="8" fill={shape.fill} stroke="#FFF9EA" strokeWidth="1.5" />
-                    <text
-                      x="0"
-                      y="3"
-                      textAnchor="middle"
-                      fontSize="8.5"
-                      fontWeight="800"
-                      fill="#FFFFFF"
-                    >
-                      {count}
-                    </text>
-                  </g>
-                </g>
-              );
-            })}
-
-            {/* Paracel & Spratly Archipelagos */}
-            <g transform="translate(302, 232)">
-              <circle cx="-6" cy="-4" r="2.2" fill="#FF8C42" />
-              <circle cx="4" cy="0" r="2.6" fill="#FF8C42" />
-              <circle cx="-2" cy="6" r="2" fill="#FF8C42" />
-              <text x="0" y="18" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#1E6091">
-                Paracel Is.
+            {/* Vietnam Spratly & Paracel Islands Affirmation */}
+            <g opacity="0.75" fontSize="8" fontWeight="600" fill="#0F766E">
+              <text x="312" y="240" textAnchor="end">
+                {language === 'vi' ? 'Q.Đ Hoàng Sa (Đà Nẵng)' : 'Paracel Islands (Vietnam)'}
               </text>
-            </g>
-            <g transform="translate(306, 404)">
-              <circle cx="-8" cy="-3" r="2.2" fill="#3D9BE9" />
-              <circle cx="2" cy="-6" r="2" fill="#3D9BE9" />
-              <circle cx="6" cy="2" r="2.5" fill="#3D9BE9" />
-              <circle cx="-3" cy="6" r="2" fill="#3D9BE9" />
-              <text x="0" y="19" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#1E6091">
-                Spratly Is.
+              <circle cx="316" cy="238" r="2" fill="#FF8C42" />
+              <text x="320" y="380" textAnchor="end">
+                {language === 'vi' ? 'Q.Đ Trường Sa (Khánh Hòa)' : 'Spratly Islands (Vietnam)'}
               </text>
+              <circle cx="324" cy="378" r="2" fill="#FF8C42" />
             </g>
           </svg>
 
-          {/* Floating Region Tooltip inside Map Corner */}
-          <div className="absolute top-3 left-3 max-w-[200px] bg-white/92 backdrop-blur-md rounded-xl px-3 py-2 border border-slate-900/10 shadow-sm pointer-events-none">
-            <div className="text-[11px] font-bold uppercase tracking-wide text-[#0F766E]">
-              {focusedRegionInfo ? focusedRegionInfo.name : 'All Across Vietnam'}
+          {/* Floating Hover Badge */}
+          {focusedRegionInfo && (
+            <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-900/10 shadow-md pointer-events-none flex items-center gap-2">
+              <span
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: focusedRegionInfo.accentColor }}
+              />
+              <span className="font-display font-bold text-xs text-slate-900">
+                {focusedRegionInfo.shortName}
+              </span>
+              <span className="text-[11px] font-semibold text-slate-500 tabular-nums">
+                · {countGroupsInRegion(focusedRegionInfo.id)} {t('countText')}
+              </span>
             </div>
-            <div className="text-xs font-extrabold text-slate-900 tabular-nums mt-0.5">
-              {focusedCount} resident ethnic groups
-            </div>
-            {focusedRegionInfo && (
-              <div className="text-[11px] text-slate-600 mt-0.5 leading-snug">
-                {focusedRegionInfo.landmarks.join(' · ')}
-              </div>
-            )}
-          </div>
+          )}
         </div>
 
-        {/* Regional Diorama Preview Card (Expanded Map Mode) */}
+        {/* Detailed Region Cultural Card (in expanded mode or selection) */}
         {expanded && (
-          <div className="lg:col-span-5 flex flex-col gap-3 min-h-0">
+          <div className="lg:col-span-5 h-full min-h-0 flex flex-col">
             {focusedRegionInfo ? (
-              <div className="museum-card p-4 flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto museum-scroll">
-                <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-100 shrink-0 group">
+              <div className="museum-card p-4 flex flex-col justify-between gap-3 flex-1 overflow-hidden">
+                <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden group">
                   <img
                     src={focusedRegionInfo.dioramaImage}
-                    alt={`3D cultural landscape of ${focusedRegionInfo.name}`}
+                    alt={focusedRegionInfo.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   {onZoomImage && (
@@ -357,7 +311,7 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
                       onClick={() =>
                         onZoomImage({
                           src: focusedRegionInfo.dioramaImage,
-                          title: `Cultural space of the ${focusedRegionInfo.name}`,
+                          title: focusedRegionInfo.name,
                           subtitle: focusedRegionInfo.landmarks.join(' · '),
                         })
                       }
@@ -378,14 +332,14 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
                       {focusedRegionInfo.name}
                     </h3>
                     <span className="text-xs font-bold text-slate-600 tabular-nums">
-                      {countGroupsInRegion(focusedRegionInfo.id)} ethnic groups
+                      {countGroupsInRegion(focusedRegionInfo.id)} {t('countText')}
                     </span>
                   </div>
                   <p className="mt-1.5 text-sm text-slate-700 leading-relaxed">
                     {focusedRegionInfo.description}
                   </p>
                   <div className="mt-3 pt-2.5 border-t border-slate-900/8 text-xs text-slate-600">
-                    <span className="font-bold text-slate-800">Key cultural symbols: </span>
+                    <span className="font-bold text-slate-800">{t('mapTypicalSymbols')}: </span>
                     {focusedRegionInfo.landmarks.join(' · ')}
                   </div>
                 </div>
@@ -394,15 +348,15 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
               <div className="museum-card p-5 flex flex-col justify-between gap-4 flex-1">
                 <div>
                   <h3 className="font-display font-extrabold text-lg text-slate-900">
-                    6 Cultural Regions — One Unified Vietnam
+                    {t('aboutSlogan')}
                   </h3>
                   <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                    From the towering northern mountains and the fertile Red River Delta to the Truong Son range, the central coastline, the volcanic Central Highlands, and the bustling waterways of the South, 54 ethnic groups live harmoniously together, shaping Vietnam's rich cultural mosaic.
+                    {t('aboutP1')}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2.5">
-                  {REGIONS.map((region) => (
+                  {regions.map((region) => (
                     <button
                       key={region.id}
                       type="button"
@@ -419,15 +373,11 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
                         </span>
                       </div>
                       <div className="mt-1 text-[11px] text-slate-500 tabular-nums">
-                        {countGroupsInRegion(region.id)} ethnic groups
+                        {countGroupsInRegion(region.id)} {t('countText')}
                       </div>
                     </button>
                   ))}
                 </div>
-
-                <p className="text-xs text-slate-500 leading-relaxed border-t border-slate-900/8 pt-3">
-                  Please note: Many ethnic groups traditionally live across several regions and are now found throughout the country.
-                </p>
               </div>
             )}
           </div>
@@ -436,7 +386,7 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
 
       {/* 6-Region Interactive Selector Strip */}
       <div className="shrink-0 grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-        {REGIONS.map((region) => {
+        {regions.map((region) => {
           const isSelected = activeRegion === region.id;
           return (
             <button
@@ -470,12 +420,6 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
           );
         })}
       </div>
-
-      {!expanded && (
-        <p className="shrink-0 text-[11px] text-slate-500 leading-snug">
-          Please note: Many ethnic groups live across multiple geographical regions and throughout Vietnam.
-        </p>
-      )}
     </div>
   );
 };

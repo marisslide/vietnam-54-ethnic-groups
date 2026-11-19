@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { LightboxImage } from '../types/ethnic';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ImageViewerProps {
   image: LightboxImage | null;
@@ -8,6 +9,7 @@ interface ImageViewerProps {
 }
 
 export const ImageViewer: React.FC<ImageViewerProps> = ({ image, onClose }) => {
+  const { language, t } = useLanguage();
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
@@ -54,8 +56,8 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({ image, onClose }) => {
             type="button"
             onClick={() => setScale((s) => Math.max(0.75, Number((s - 0.25).toFixed(2))))}
             className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-            title="Zoom out"
-            aria-label="Zoom out"
+            title={language === 'vi' ? 'Thu nhỏ' : 'Zoom out'}
+            aria-label={language === 'vi' ? 'Thu nhỏ' : 'Zoom out'}
           >
             <ZoomOut className="w-4 h-4" />
           </button>
@@ -66,8 +68,8 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({ image, onClose }) => {
             type="button"
             onClick={() => setScale((s) => Math.min(2.5, Number((s + 0.25).toFixed(2))))}
             className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-            title="Zoom in"
-            aria-label="Zoom in"
+            title={language === 'vi' ? 'Phóng to' : 'Zoom in'}
+            aria-label={language === 'vi' ? 'Phóng to' : 'Zoom in'}
           >
             <ZoomIn className="w-4 h-4" />
           </button>
@@ -75,8 +77,8 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({ image, onClose }) => {
             type="button"
             onClick={() => setScale(1)}
             className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-            title="Reset zoom"
-            aria-label="Reset zoom"
+            title={language === 'vi' ? 'Đặt lại kích thước' : 'Reset zoom'}
+            aria-label={language === 'vi' ? 'Đặt lại kích thước' : 'Reset zoom'}
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -84,8 +86,8 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({ image, onClose }) => {
             type="button"
             onClick={onClose}
             className="ml-2 p-2 rounded-lg bg-[#FF8C42] hover:bg-[#ea7a31] text-white transition-colors"
-            title="Close"
-            aria-label="Close image viewer"
+            title={t('lightboxClose')}
+            aria-label={t('lightboxClose')}
           >
             <X className="w-5 h-5" />
           </button>
