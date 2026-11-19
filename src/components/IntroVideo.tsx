@@ -223,14 +223,14 @@ export const IntroVideo: React.FC<IntroVideoProps> = ({ onStartExplore }) => {
       {/* Main Centered Documentary Stage */}
       <div className="relative z-10 flex-1 min-h-0 max-w-[1680px] w-full mx-auto px-4 sm:px-8 lg:px-12 py-4 lg:py-5 flex flex-col items-center justify-center gap-4 lg:gap-5">
         {/* Title & Subtitle Header */}
-        <div className="text-center max-w-4xl">
-          <p className="text-xs sm:text-sm font-bold tracking-[0.22em] uppercase text-[#FFC83D] mb-1.5">
+        <div className="text-center w-full max-w-6xl px-2">
+          <p className="text-xs sm:text-sm font-bold tracking-[0.22em] uppercase text-[#FFC83D] mb-2 sm:mb-2.5">
             {t('heroBadge')}
           </p>
-          <h1 className="font-display font-black type-hero tracking-tight text-white drop-shadow-md">
+          <h1 className="font-display font-black text-xl sm:text-2xl md:text-3xl lg:text-[2.2rem] xl:text-[2.4rem] tracking-tight sm:tracking-normal text-white drop-shadow-md whitespace-normal sm:whitespace-nowrap leading-snug">
             {t('aboutMainTitle')}
           </h1>
-          <p className="mt-1.5 text-sm sm:text-base lg:text-lg text-amber-50/90 font-medium">
+          <p className="mt-2 sm:mt-2.5 text-xs sm:text-sm lg:text-base text-amber-50/90 font-medium max-w-3xl mx-auto leading-relaxed">
             {t('introSubtitle')}
           </p>
         </div>
