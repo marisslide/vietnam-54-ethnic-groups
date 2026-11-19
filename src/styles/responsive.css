@@ -1,0 +1,64 @@
+/* Responsive typography & 16:9 widescreen scaling tokens for projector, laptop, and desktop */
+:root {
+  --text-hero: clamp(2rem, 3.4vw, 3.6rem);
+  --text-page-title: clamp(1.45rem, 2.2vw, 2.35rem);
+  --text-section: clamp(1.1rem, 1.45vw, 1.55rem);
+  --text-body: clamp(0.92rem, 0.95vw, 1.05rem);
+  --text-caption: clamp(0.76rem, 0.78vw, 0.85rem);
+  --stage-max-width: 1920px;
+}
+
+.type-hero {
+  font-size: var(--text-hero);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.type-page-title {
+  font-size: var(--text-page-title);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+}
+
+.type-section {
+  font-size: var(--text-section);
+  line-height: 1.28;
+}
+
+.type-body {
+  font-size: var(--text-body);
+  line-height: 1.65;
+}
+
+.type-caption {
+  font-size: var(--text-caption);
+  line-height: 1.45;
+}
+
+/* Desktop 16:9 museum viewport shell */
+@media (min-width: 1024px) {
+  .museum-viewport {
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .museum-main-stage {
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 1023px) {
+  .museum-viewport {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .museum-main-stage {
+    flex: 1 1 auto;
+  }
+}

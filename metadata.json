@@ -1,0 +1,6 @@
+{
+  "name": "54 Colours of Vietnam",
+  "description": "An interactive digital cultural museum exploring the living environments, traditional architecture, economies, customs, and authentic attire of Vietnam's 54 ethnic groups.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
