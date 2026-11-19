@@ -134,19 +134,28 @@ export const HomePage: React.FC<HomePageProps> = ({
                     key={group.id}
                     type="button"
                     onClick={() => onSelectEthnic(group.id)}
-                    className="text-left p-2.5 rounded-xl border border-slate-900/10 hover:border-[#15B8A6] bg-[#FFFDF8] hover:bg-white transition-all cursor-pointer group"
+                    className="text-left p-2 rounded-xl border border-slate-900/10 hover:border-[#15B8A6] bg-[#FFFDF8] hover:bg-white transition-all cursor-pointer group flex items-center gap-2"
                   >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-display font-extrabold text-xs sm:text-sm text-slate-900 group-hover:text-[#0F766E] truncate">
-                        {group.name}
-                      </span>
-                      <span className="text-[11px] font-bold text-slate-400 tabular-nums shrink-0">
-                        {String(group.number).padStart(2, '0')}
-                      </span>
+                    {group.avatarUrl ? (
+                      <img
+                        src={group.avatarUrl}
+                        alt={group.name}
+                        className="w-8 h-8 rounded-lg object-cover object-center shrink-0 border border-slate-200"
+                      />
+                    ) : null}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="font-display font-extrabold text-xs sm:text-sm text-slate-900 group-hover:text-[#0F766E] truncate">
+                          {group.name}
+                        </span>
+                        <span className="text-[11px] font-bold text-slate-400 tabular-nums shrink-0">
+                          {String(group.number).padStart(2, '0')}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-[11px] text-slate-500 truncate">
+                        {group.languageFamily}
+                      </p>
                     </div>
-                    <p className="mt-0.5 text-[11px] text-slate-500 truncate">
-                      {group.languageFamily}
-                    </p>
                   </button>
                 ))}
               </div>

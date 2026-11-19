@@ -97,6 +97,7 @@ export interface EthnicGroup {
   number: number;
   name: string;
   aliases: string[];
+  avatarUrl?: string;
   languageFamily: string;
   languageFamilyId: LanguageFamilyId;
   languageGroup: string;

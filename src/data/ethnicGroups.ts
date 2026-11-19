@@ -9,7 +9,7 @@ import { ETHNIC_PART_6 } from './parts/part6';
 import { applyEnglishTranslation } from './translations_en';
 import { Language } from '../i18n/translations';
 
-export const ETHNIC_GROUPS_VI: EthnicGroup[] = [
+export const RAW_ETHNIC_GROUPS: EthnicGroup[] = [
   ...ETHNIC_PART_1,
   ...ETHNIC_PART_2,
   ...ETHNIC_PART_3,
@@ -17,6 +17,83 @@ export const ETHNIC_GROUPS_VI: EthnicGroup[] = [
   ...ETHNIC_PART_5,
   ...ETHNIC_PART_6,
 ];
+
+// Mapping of custom avatar portraits uploaded by user
+export const ETHNIC_AVATAR_MAP: Record<string, string> = {
+  cong: '/images/avatars/cong.jpg', // 01
+  'ha-nhi': '/images/avatars/ha-nhi.jpg', // 02
+  khang: '/images/avatars/khang.jpg', // 03
+  'kho-mu': '/images/avatars/kho-mu.jpg', // 04
+  'la-ha': '/images/avatars/la-ha.jpg', // 05
+  'la-hu': '/images/avatars/la-hu.jpg', // 06
+  lao: '/images/avatars/lao.jpg', // 07
+  lu: '/images/avatars/lu.jpg', // 08
+  mang: '/images/avatars/mang.jpg', // 09
+  'si-la': '/images/avatars/si-la.jpg', // 10
+  'xinh-mun': '/images/avatars/xinh-mun.jpg', // 11
+  'bo-y': '/images/avatars/bo-y.jpg', // 12
+  dao: '/images/avatars/dao.jpg', // 13
+  giay: '/images/avatars/giay.jpg', // 14
+  hmong: '/images/avatars/hmong.jpg', // 15
+};
+
+// Priority ordering matching user's avatar card numbers (01/54 -> 15/54)
+export const ORDERED_ETHNIC_IDS: string[] = [
+  'cong', // 01/54
+  'ha-nhi', // 02/54
+  'khang', // 03/54
+  'kho-mu', // 04/54
+  'la-ha', // 05/54
+  'la-hu', // 06/54
+  'lao', // 07/54
+  'lu', // 08/54
+  'mang', // 09/54
+  'si-la', // 10/54
+  'xinh-mun', // 11/54
+  'bo-y', // 12/54
+  'dao', // 13/54
+  'giay', // 14/54
+  'hmong', // 15/54
+];
+
+function buildOrderedEthnicGroups(rawList: EthnicGroup[]): EthnicGroup[] {
+  const map = new Map<string, EthnicGroup>();
+  for (const g of rawList) {
+    map.set(g.id, g);
+  }
+
+  const result: EthnicGroup[] = [];
+
+  // 1. First add prioritized groups in exact ordered sequence
+  ORDERED_ETHNIC_IDS.forEach((id, index) => {
+    const group = map.get(id);
+    if (group) {
+      result.push({
+        ...group,
+        number: index + 1,
+        avatarUrl: ETHNIC_AVATAR_MAP[id] || group.avatarUrl,
+      });
+      map.delete(id);
+    }
+  });
+
+  // 2. Append all remaining groups, continuing numbering from 16 to 54
+  let nextNumber = ORDERED_ETHNIC_IDS.length + 1;
+  for (const group of rawList) {
+    if (map.has(group.id)) {
+      result.push({
+        ...group,
+        number: nextNumber++,
+        avatarUrl: ETHNIC_AVATAR_MAP[group.id] || group.avatarUrl,
+      });
+      map.delete(group.id);
+    }
+  }
+
+  return result;
+}
+
+export const ETHNIC_GROUPS_VI: EthnicGroup[] = buildOrderedEthnicGroups(RAW_ETHNIC_GROUPS);
 
 // Lazy cached English dataset
 let cachedEthnicGroupsEn: EthnicGroup[] | null = null;

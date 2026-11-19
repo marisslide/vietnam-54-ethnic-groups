@@ -180,8 +180,16 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
             />
 
             <div className="relative z-10 flex items-center gap-4 max-w-2xl">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/95 shadow-md border border-slate-900/8 flex items-center justify-center shrink-0">
-                <CulturalIcon type={group.culturalSymbol} color={group.accentColor} size={40} />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/95 shadow-md border border-slate-900/8 flex items-center justify-center shrink-0 overflow-hidden">
+                {group.avatarUrl ? (
+                  <img
+                    src={group.avatarUrl}
+                    alt={group.name}
+                    className="w-full h-full object-cover object-center"
+                  />
+                ) : (
+                  <CulturalIcon type={group.culturalSymbol} color={group.accentColor} size={40} />
+                )}
               </div>
               <div className="min-w-0">
                 <div className="text-[11px] font-bold uppercase tracking-wider text-[#0F766E]">
@@ -343,7 +351,20 @@ export const EthnicDetail: React.FC<EthnicDetailProps> = ({
               idPrefix={`profile-${group.id}`}
             />
 
-            {authenticPreview ? (
+            {group.avatarUrl ? (
+              <img
+                src={group.avatarUrl}
+                alt={`${group.name}`}
+                onClick={() =>
+                  onZoomImage({
+                    src: group.avatarUrl!,
+                    title: `${group.name}`,
+                    isAiGenerated: false,
+                  })
+                }
+                className="relative z-10 w-18 h-18 rounded-2xl object-cover object-center shadow-md border-2 border-white cursor-zoom-in shrink-0"
+              />
+            ) : authenticPreview ? (
               <img
                 src={authenticPreview}
                 alt={`${group.name}`}
