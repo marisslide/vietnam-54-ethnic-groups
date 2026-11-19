@@ -50,9 +50,24 @@ export const ETHNIC_AVATAR_MAP: Record<string, string> = {
   muong: '/images/avatars/muong.jpg', // 28
   kinh: '/images/avatars/kinh.jpg', // 29
   'bru-van-kieu': '/images/avatars/bru-van-kieu.jpg', // 30
+  chut: '/images/avatars/chut.jpg', // 31
+  'co-tu': '/images/avatars/co-tu.jpg', // 32
+  'o-du': '/images/avatars/o-du.jpg', // 33
+  'ta-oi': '/images/avatars/ta-oi.jpg', // 34
+  tho: '/images/avatars/tho.jpg', // 35
+  co: '/images/avatars/co.jpg', // 36
+  'ra-glai': '/images/avatars/ra-glai.jpg', // 37
+  brau: '/images/avatars/brau.jpg', // 38
+  'chu-ru': '/images/avatars/chu-ru.jpg', // 39
+  'co-ho': '/images/avatars/co-ho.jpg', // 40
+  'e-de': '/images/avatars/e-de.jpg', // 41
+  'gia-rai': '/images/avatars/gia-rai.jpg', // 42
+  ma: '/images/avatars/ma.jpg', // 43
+  mnong: '/images/avatars/mnong.jpg', // 44
+  'ro-mam': '/images/avatars/ro-mam.jpg', // 45
 };
 
-// Priority ordering matching user's avatar card numbers (01/54 -> 30/54)
+// Priority ordering matching user's avatar card numbers (01/54 -> 45/54)
 export const ORDERED_ETHNIC_IDS: string[] = [
   'cong', // 01/54
   'ha-nhi', // 02/54
@@ -84,6 +99,21 @@ export const ORDERED_ETHNIC_IDS: string[] = [
   'muong', // 28/54
   'kinh', // 29/54
   'bru-van-kieu', // 30/54
+  'chut', // 31/54
+  'co-tu', // 32/54
+  'o-du', // 33/54
+  'ta-oi', // 34/54
+  'tho', // 35/54
+  'co', // 36/54
+  'ra-glai', // 37/54
+  'brau', // 38/54
+  'chu-ru', // 39/54
+  'co-ho', // 40/54
+  'e-de', // 41/54
+  'gia-rai', // 42/54
+  'ma', // 43/54
+  'mnong', // 44/54
+  'ro-mam', // 45/54
 ];
 
 function buildOrderedEthnicGroups(rawList: EthnicGroup[]): EthnicGroup[] {

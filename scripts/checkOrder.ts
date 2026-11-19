@@ -1,12 +1,12 @@
 import { ETHNIC_GROUPS_VI, getEthnicGroupsEn } from '../src/data/ethnicGroups';
 
-console.log('=== VERIFYING ORDER & AVATARS (BATCH 1-30) ===');
+console.log('=== VERIFYING ORDER & AVATARS (BATCH 1-45) ===');
 console.log('Total VI groups:', ETHNIC_GROUPS_VI.length);
 const enGroups = getEthnicGroupsEn();
 console.log('Total EN groups:', enGroups.length);
 
-console.log('\n--- First 30 Groups (Custom Avatar Set 01 to 30) ---');
-for (let i = 0; i < 30; i++) {
+console.log('\n--- Groups 31 to 45 (New Batch 3) ---');
+for (let i = 30; i < 45; i++) {
   const vi = ETHNIC_GROUPS_VI[i];
   const en = enGroups[i];
   console.log(
@@ -14,8 +14,8 @@ for (let i = 0; i < 30; i++) {
   );
 }
 
-console.log('\n--- Groups 31 to 35 (Remaining Groups) ---');
-for (let i = 30; i < 35; i++) {
+console.log('\n--- Remaining 9 Groups (46 to 54) ---');
+for (let i = 45; i < 54; i++) {
   const vi = ETHNIC_GROUPS_VI[i];
   const en = enGroups[i];
   console.log(
