@@ -291,7 +291,7 @@ export const IntroVideo: React.FC<IntroVideoProps> = ({ onStartExplore }) => {
                 <p className="mt-2 text-sm text-slate-300 max-w-lg">
                   {language === 'vi'
                     ? 'Bạn có thể xem video trực tiếp trên YouTube hoặc bắt đầu khám phá bảo tàng ngay lập tức.'
-                    : 'You can watch the introductory video directly on YouTube or start exploring the 54 Colours of Vietnam museum straight away.'}
+                    : 'You can watch the introductory video directly on YouTube or start exploring the Discover the 54 ethnic groups of Vietnam museum straight away.'}
                 </p>
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
                   <a

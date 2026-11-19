@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { ZoomIn, MapPin, RotateCcw } from 'lucide-react';
 import { LightboxImage, RegionId } from '../types/ethnic';
 import { getRegions, countGroupsInRegion, getRegionById } from '../data/ethnicGroups';
@@ -11,86 +11,87 @@ interface VietnamMapProps {
   expanded?: boolean;
 }
 
-interface RegionShapeDef {
+interface RegionPinDef {
   id: RegionId;
-  path: string;
-  labelX: number;
-  labelY: number;
-  pinX: number;
-  pinY: number;
-  fill: string;
-  hoverFill: string;
-  landmarkLabel: string;
+  nameVi: string;
+  nameEn: string;
+  xPercent: number; // 0..100%
+  yPercent: number; // 0..100%
+  color: string;
 }
 
-const REGION_SHAPES: RegionShapeDef[] = [
+const REGION_PINS: RegionPinDef[] = [
   {
     id: 'mien-nui-phia-bac',
-    path: 'M 72 68 C 86 44, 128 32, 166 38 C 194 42, 224 52, 240 76 C 246 86, 232 104, 212 108 C 198 100, 174 92, 152 94 C 138 112, 124 128, 108 134 C 86 124, 68 96, 72 68 Z',
-    labelX: 152,
-    labelY: 64,
-    pinX: 120,
-    pinY: 74,
-    fill: '#36B86B',
-    hoverFill: '#299c58',
-    landmarkLabel: 'Terraced Fields · Stilt Houses',
+    nameVi: 'Miền núi phía Bắc',
+    nameEn: 'Northern Mountains',
+    xPercent: 35.8,
+    yPercent: 12.6,
+    color: '#35A817', // Green in the map
   },
   {
     id: 'dong-bang-bac-bo',
-    path: 'M 152 94 C 174 92, 198 100, 212 108 C 220 116, 218 134, 206 146 C 188 152, 166 150, 148 144 C 142 132, 142 110, 152 94 Z',
-    labelX: 184,
-    labelY: 124,
-    pinX: 182,
-    pinY: 122,
-    fill: '#F58BA8',
-    hoverFill: '#e46c8e',
-    landmarkLabel: 'Communal Houses · Lotus Ponds',
+    nameVi: 'Đồng bằng Bắc Bộ',
+    nameEn: 'Red River Delta',
+    xPercent: 47.7,
+    yPercent: 25.5,
+    color: '#F12B6B', // Pink in the map
   },
   {
     id: 'bac-trung-bo',
-    path: 'M 108 134 C 124 128, 138 140, 148 144 C 166 150, 184 152, 190 162 C 196 184, 212 206, 230 226 C 216 238, 200 244, 186 240 C 166 220, 144 196, 128 172 C 118 158, 110 146, 108 134 Z',
-    labelX: 170,
-    labelY: 194,
-    pinX: 168,
-    pinY: 190,
-    fill: '#15B8A6',
-    hoverFill: '#0e9687',
-    landmarkLabel: 'Truong Son Range · Zeng Weaving',
-  },
-  {
-    id: 'duyen-hai-mien-trung',
-    path: 'M 230 226 C 248 242, 266 268, 274 302 C 280 332, 274 366, 256 390 C 242 396, 230 390, 224 378 C 234 352, 240 318, 234 286 C 228 264, 214 248, 204 238 C 212 234, 222 232, 230 226 Z',
-    labelX: 256,
-    labelY: 306,
-    pinX: 254,
-    pinY: 312,
-    fill: '#FF8C42',
-    hoverFill: '#e6732a',
-    landmarkLabel: 'Cham Towers · Guol Houses',
+    nameVi: 'Bắc Trung Bộ',
+    nameEn: 'North Central Coast',
+    xPercent: 38.0,
+    yPercent: 38.0,
+    color: '#00A396', // Teal in the map
   },
   {
     id: 'tay-nguyen',
-    path: 'M 186 240 C 200 244, 214 248, 224 264 C 234 286, 240 318, 234 352 C 224 378, 208 386, 194 380 C 182 366, 174 344, 174 318 C 174 290, 178 262, 186 240 Z',
-    labelX: 206,
-    labelY: 312,
-    pinX: 204,
-    pinY: 316,
-    fill: '#E11D48',
-    hoverFill: '#c7133b',
-    landmarkLabel: 'Nha Rong · Gong Culture',
+    nameVi: 'Tây Nguyên',
+    nameEn: 'Central Highlands',
+    xPercent: 56.3,
+    yPercent: 69.0,
+    color: '#E51928', // Red in the map
+  },
+  {
+    id: 'duyen-hai-mien-trung',
+    nameVi: 'Duyên hải miền Trung',
+    nameEn: 'Central Coastal Area',
+    xPercent: 67.3,
+    yPercent: 68.0,
+    color: '#FDB813', // Yellow in the map
   },
   {
     id: 'nam-bo',
-    path: 'M 194 380 C 208 386, 224 378, 242 396 C 256 390, 260 412, 252 432 C 238 456, 204 476, 176 478 C 146 474, 134 446, 146 422 C 160 398, 178 386, 194 380 Z',
-    labelX: 198,
-    labelY: 432,
-    pinX: 196,
-    pinY: 436,
-    fill: '#3D9BE9',
-    hoverFill: '#227fc9',
-    landmarkLabel: 'Floating Markets · Khmer Pagodas',
+    nameVi: 'Nam Bộ',
+    nameEn: 'Southern Vietnam',
+    xPercent: 35.8,
+    yPercent: 86.0,
+    color: '#0078F0', // Blue in the map
   },
 ];
+
+function classifyPixel(r: number, g: number, b: number, a: number): RegionId | null {
+  if (a < 40) return null;
+  // White borders or transparent / light background
+  if (r > 220 && g > 220 && b > 220) return null;
+  if (Math.abs(r - g) < 18 && Math.abs(g - b) < 18 && Math.abs(r - b) < 18) return null;
+
+  // 1. Green: Miền núi phía Bắc
+  if (g > 110 && r < 100 && b < 60) return 'mien-nui-phia-bac';
+  // 2. Pink: Đồng bằng Bắc Bộ
+  if (r > 175 && b > 60 && g < 90) return 'dong-bang-bac-bo';
+  // 3. Teal: Bắc Trung Bộ
+  if (g > 100 && b > 100 && r < 70) return 'bac-trung-bo';
+  // 4. Red: Tây Nguyên
+  if (r > 175 && g < 55 && b < 70) return 'tay-nguyen';
+  // 5. Yellow: Duyên hải Nam Trung Bộ & Hoàng Sa - Trường Sa
+  if (r > 185 && g > 135 && b < 65) return 'duyen-hai-mien-trung';
+  // 6. Blue: Nam Bộ
+  if (b > 170 && r < 70) return 'nam-bo';
+
+  return null;
+}
 
 export const VietnamMap: React.FC<VietnamMapProps> = ({
   activeRegion,
@@ -100,11 +101,105 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
 }) => {
   const { language, t } = useLanguage();
   const [hoveredRegion, setHoveredRegion] = useState<RegionId | null>(null);
+  const [isPointerOnRegion, setIsPointerOnRegion] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   const regions = useMemo(() => getRegions(language), [language]);
-
   const focusedRegionId = hoveredRegion || activeRegion;
   const focusedRegionInfo = focusedRegionId ? getRegionById(focusedRegionId, language) : null;
+
+  // Prepare in-memory canvas for pixel detection
+  const setupCanvas = useCallback(() => {
+    const img = imgRef.current;
+    if (!img || !img.naturalWidth || !img.naturalHeight) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) return;
+
+    ctx.drawImage(img, 0, 0);
+    canvasRef.current = canvas;
+    ctxRef.current = ctx;
+  }, []);
+
+  useEffect(() => {
+    setupCanvas();
+  }, [setupCanvas]);
+
+  // Translate client mouse/click coordinates to image pixel coordinate
+  const getRegionAtEvent = (e: React.MouseEvent<HTMLDivElement>): RegionId | null => {
+    const img = imgRef.current;
+    const ctx = ctxRef.current;
+    if (!img || !ctx) return null;
+
+    const rect = img.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (x < 0 || y < 0 || x > rect.width || y > rect.height) return null;
+
+    // Scale to natural image dimensions
+    const scaleX = img.naturalWidth / rect.width;
+    const scaleY = img.naturalHeight / rect.height;
+    const imgX = Math.floor(x * scaleX);
+    const imgY = Math.floor(y * scaleY);
+
+    if (imgX < 0 || imgX >= img.naturalWidth || imgY < 0 || imgY >= img.naturalHeight) return null;
+
+    const pixel = ctx.getImageData(imgX, imgY, 1, 1).data;
+    let region = classifyPixel(pixel[0], pixel[1], pixel[2], pixel[3]);
+
+    // If on a border pixel, sample nearby offsets (radius 4px) to catch adjacent region
+    if (!region) {
+      const offsets = [
+        [0, -4], [0, 4], [-4, 0], [4, 0],
+        [-3, -3], [3, 3], [-3, 3], [3, -3]
+      ];
+      for (const [dx, dy] of offsets) {
+        const nx = imgX + dx;
+        const ny = imgY + dy;
+        if (nx >= 0 && nx < img.naturalWidth && ny >= 0 && ny < img.naturalHeight) {
+          const np = ctx.getImageData(nx, ny, 1, 1).data;
+          const nr = classifyPixel(np[0], np[1], np[2], np[3]);
+          if (nr) {
+            region = nr;
+            break;
+          }
+        }
+      }
+    }
+
+    return region;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const region = getRegionAtEvent(e);
+    if (region) {
+      setHoveredRegion(region);
+      setIsPointerOnRegion(true);
+    } else {
+      setHoveredRegion(null);
+      setIsPointerOnRegion(false);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRegion(null);
+    setIsPointerOnRegion(false);
+  };
+
+  const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const region = getRegionAtEvent(e);
+    if (region) {
+      handleRegionClick(region);
+    }
+  };
 
   const handleRegionClick = (id: RegionId) => {
     if (activeRegion === id) {
@@ -124,7 +219,9 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
             <span>{t('mapTitle')}</span>
           </h2>
           <p className="text-xs text-slate-500">
-            {t('mapInstruction')}
+            {language === 'vi'
+              ? 'Bấm trực tiếp vào từng vùng màu trên bản đồ để khám phá các dân tộc cư trú'
+              : 'Click directly on any coloured region on the map to explore its ethnic groups'}
           </p>
         </div>
 
@@ -146,155 +243,129 @@ export const VietnamMap: React.FC<VietnamMapProps> = ({
           expanded ? 'grid-cols-1 lg:grid-cols-12' : 'grid-cols-1'
         }`}
       >
-        {/* Stylized 3D SVG Map */}
+        {/* Real Interactive Map Image Container */}
         <div
-          className={`relative rounded-2xl border border-sky-200/70 overflow-hidden flex items-center justify-center p-2 ${
-            expanded ? 'lg:col-span-7 min-h-[380px]' : 'min-h-[290px]'
-          }`}
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          onClick={handleMapClick}
+          className={`relative rounded-2xl border border-sky-200/80 overflow-hidden flex items-center justify-center p-2 select-none ${
+            expanded ? 'lg:col-span-7 min-h-[460px] lg:min-h-[580px]' : 'min-h-[360px]'
+          } ${isPointerOnRegion ? 'cursor-pointer' : 'cursor-default'}`}
           style={{
             background:
-              'radial-gradient(circle at 38% 30%, #E8F8FA 0%, #D4F0F7 52%, #C3E7F5 100%)',
+              'radial-gradient(circle at 45% 35%, #F0F9FF 0%, #E0F2FE 52%, #BAE6FD 100%)',
           }}
         >
-          {/* Decorative ocean curves */}
-          <svg
-            viewBox="0 0 360 520"
-            className="w-full h-full max-h-[540px] select-none"
-            role="img"
-            aria-label={t('mapTitle')}
-          >
-            <defs>
-              <filter id="vietnam-3d-shadow" x="-15%" y="-10%" width="140%" height="130%">
-                <feDropShadow dx="4" dy="7" stdDeviation="4" floodColor="#0F4C5C" floodOpacity="0.24" />
-              </filter>
-              <filter id="pin-glow" x="-40%" y="-40%" width="180%" height="180%">
-                <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#0F172A" floodOpacity="0.3" />
-              </filter>
-            </defs>
+          {/* Authentic Map Image */}
+          <div className="relative w-full h-full max-h-[620px] flex items-center justify-center">
+            <img
+              ref={imgRef}
+              src="/images/vietnam-map.png"
+              alt={t('mapTitle')}
+              onLoad={setupCanvas}
+              draggable={false}
+              className="max-h-full max-w-full object-contain filter drop-shadow-[0_12px_24px_rgba(15,76,92,0.18)] transition-transform duration-300 pointer-events-none"
+            />
 
-            {/* Subtle East Sea Waves */}
-            <g stroke="#3D9BE9" strokeOpacity="0.16" strokeWidth="1.2" fill="none">
-              <path d="M 260 120 Q 280 112 300 120 T 340 120" />
-              <path d="M 275 180 Q 295 172 315 180 T 350 180" />
-              <path d="M 285 260 Q 305 252 325 260 T 355 260" />
-              <path d="M 255 430 Q 275 422 295 430 T 335 430" />
-              <path d="M 30 330 Q 50 322 70 330 T 110 330" />
-            </g>
+            {/* Interactive Pins & Region Badges overlaid at coordinates */}
+            {REGION_PINS.map((pin) => {
+              const isSelected = activeRegion === pin.id;
+              const isHovered = hoveredRegion === pin.id;
 
-            {/* Compass Rose */}
-            <g transform="translate(52, 456)" opacity="0.58">
-              <circle cx="0" cy="0" r="22" fill="#FFF9EA" fillOpacity="0.7" stroke="#0F766E" strokeWidth="1.2" />
-              <path d="M 0 -17 L 4 0 L 0 17 L -4 0 Z" fill="#15B8A6" />
-              <path d="M -17 0 L 0 -4 L 17 0 L 0 4 Z" fill="#FF8C42" />
-              <text x="0" y="-25" textAnchor="middle" fontSize="9" fontWeight="800" fill="#0F766E">
-                N
-              </text>
-            </g>
-
-            {/* East Sea Label */}
-            <text
-              x="298"
-              y="152"
-              textAnchor="middle"
-              fontSize="11"
-              fontWeight="700"
-              fill="#1E6091"
-              fillOpacity="0.65"
-              letterSpacing="1.6"
-            >
-              {language === 'vi' ? 'BIỂN ĐÔNG' : 'EAST SEA'}
-            </text>
-
-            {/* 6 Interactive 3D Extruded Regions */}
-            <g filter="url(#vietnam-3d-shadow)">
-              {REGION_SHAPES.map((shape) => {
-                const isSelected = activeRegion === shape.id;
-                const isHovered = hoveredRegion === shape.id;
-                const isDimmed = activeRegion !== null && !isSelected && !isHovered;
-
-                return (
-                  <g
-                    key={shape.id}
-                    onClick={() => handleRegionClick(shape.id)}
-                    onMouseEnter={() => setHoveredRegion(shape.id)}
-                    onMouseLeave={() => setHoveredRegion(null)}
-                    className="cursor-pointer transition-all duration-200"
-                    style={{
-                      transform: isSelected || isHovered ? 'scale(1.025)' : 'scale(1)',
-                      transformOrigin: `${shape.labelX}px ${shape.labelY}px`,
-                      opacity: isDimmed ? 0.38 : 1,
-                    }}
-                  >
-                    {/* 3D Extrusion base shadow layer */}
-                    <path
-                      d={shape.path}
-                      fill="#0C4A57"
-                      fillOpacity={isSelected ? 0.6 : 0.35}
-                      transform="translate(3, 5)"
-                    />
-
-                    {/* Main region polygon */}
-                    <path
-                      d={shape.path}
-                      fill={isHovered ? shape.hoverFill : shape.fill}
-                      stroke={isSelected ? '#FFFFFF' : '#FFFFFF'}
-                      strokeWidth={isSelected ? 3.5 : 1.6}
-                      strokeLinejoin="round"
-                    />
-
-                    {/* Interactive Pin Marker */}
-                    <g
-                      transform={`translate(${shape.pinX}, ${shape.pinY})`}
-                      filter="url(#pin-glow)"
-                    >
-                      <circle
-                        cx="0"
-                        cy="0"
-                        r={isSelected ? 7 : isHovered ? 6 : 5}
-                        fill="#FFFFFF"
-                        stroke={shape.fill}
-                        strokeWidth="2.5"
+              return (
+                <div
+                  key={pin.id}
+                  style={{
+                    left: `${pin.xPercent}%`,
+                    top: `${pin.yPercent}%`,
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRegionClick(pin.id);
+                  }}
+                  onMouseEnter={() => setHoveredRegion(pin.id)}
+                  onMouseLeave={() => setHoveredRegion(null)}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 group"
+                >
+                  {/* Pin Circle Marker with Pulsing Ring */}
+                  <div className="relative flex items-center justify-center">
+                    {(isSelected || isHovered) && (
+                      <span
+                        className="absolute w-8 h-8 rounded-full animate-ping opacity-60"
+                        style={{ backgroundColor: pin.color }}
                       />
-                      {(isSelected || isHovered) && (
-                        <circle cx="0" cy="0" r="2.5" fill={shape.fill} />
-                      )}
-                    </g>
-                  </g>
-                );
-              })}
-            </g>
+                    )}
+                    <span
+                      className={`flex items-center justify-center rounded-full border-2 border-white shadow-md transition-all duration-200 ${
+                        isSelected
+                          ? 'w-6 h-6 ring-4 ring-white/80 scale-125'
+                          : isHovered
+                          ? 'w-5 h-5 ring-2 ring-white scale-110'
+                          : 'w-4 h-4 opacity-90'
+                      }`}
+                      style={{ backgroundColor: pin.color }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                    </span>
 
-            {/* Vietnam Spratly & Paracel Islands Affirmation */}
-            <g opacity="0.75" fontSize="8" fontWeight="600" fill="#0F766E">
-              <text x="312" y="240" textAnchor="end">
-                {language === 'vi' ? 'Q.Đ Hoàng Sa (Đà Nẵng)' : 'Paracel Islands (Vietnam)'}
-              </text>
-              <circle cx="316" cy="238" r="2" fill="#FF8C42" />
-              <text x="320" y="380" textAnchor="end">
-                {language === 'vi' ? 'Q.Đ Trường Sa (Khánh Hòa)' : 'Spratly Islands (Vietnam)'}
-              </text>
-              <circle cx="324" cy="378" r="2" fill="#FF8C42" />
-            </g>
-          </svg>
+                    {/* Permanent Subtle Name Pill on Hover/Select */}
+                    {(isSelected || isHovered) && (
+                      <div
+                        className="absolute left-1/2 -translate-x-1/2 -top-8 whitespace-nowrap px-2.5 py-1 rounded-lg text-white font-display font-extrabold text-[11px] shadow-lg pointer-events-none flex items-center gap-1.5 z-20"
+                        style={{ backgroundColor: pin.color }}
+                      >
+                        <span>{language === 'vi' ? pin.nameVi : pin.nameEn}</span>
+                        <span className="text-[10px] opacity-90 tabular-nums">
+                          ({countGroupsInRegion(pin.id)})
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
 
-          {/* Floating Hover Badge */}
-          {focusedRegionInfo && (
-            <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-900/10 shadow-md pointer-events-none flex items-center gap-2">
-              <span
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: focusedRegionInfo.accentColor }}
-              />
-              <span className="font-display font-bold text-xs text-slate-900">
-                {focusedRegionInfo.shortName}
-              </span>
-              <span className="text-[11px] font-semibold text-slate-500 tabular-nums">
-                · {countGroupsInRegion(focusedRegionInfo.id)} {t('countText')}
+            {/* Sovereignty Affirmation Badges for Islands */}
+            <div className="absolute right-[12%] top-[37%] pointer-events-none opacity-80 text-right">
+              <span className="text-[10px] font-bold text-amber-800 bg-white/80 px-1.5 py-0.5 rounded shadow-xs">
+                {language === 'vi' ? 'Q.Đ Hoàng Sa (Việt Nam)' : 'Paracel Islands (Vietnam)'}
               </span>
             </div>
+            <div className="absolute right-[10%] bottom-[19%] pointer-events-none opacity-80 text-right">
+              <span className="text-[10px] font-bold text-amber-800 bg-white/80 px-1.5 py-0.5 rounded shadow-xs">
+                {language === 'vi' ? 'Q.Đ Trường Sa (Việt Nam)' : 'Spratly Islands (Vietnam)'}
+              </span>
+            </div>
+          </div>
+
+          {/* Floating Hover / Active Info Pill */}
+          {focusedRegionInfo && (
+            <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-900/10 shadow-lg pointer-events-none flex items-center gap-2.5 z-20">
+              <span
+                className="w-3.5 h-3.5 rounded-full shrink-0 shadow-xs"
+                style={{ backgroundColor: focusedRegionInfo.accentColor }}
+              />
+              <div className="min-w-0">
+                <div className="font-display font-extrabold text-xs sm:text-sm text-slate-900 leading-tight">
+                  {focusedRegionInfo.name}
+                </div>
+                <div className="text-[11px] font-semibold text-slate-500 tabular-nums">
+                  {countGroupsInRegion(focusedRegionInfo.id)} {t('countText')}
+                </div>
+              </div>
+            </div>
           )}
+
+          {/* Map Compass */}
+          <div className="absolute bottom-3 left-3 pointer-events-none opacity-60 flex flex-col items-center">
+            <div className="w-8 h-8 rounded-full border border-[#0F766E]/40 flex items-center justify-center bg-white/40 backdrop-blur-xs">
+              <span className="text-[11px] font-black text-[#0F766E]">N</span>
+            </div>
+          </div>
         </div>
 
-        {/* Detailed Region Cultural Card (in expanded mode or selection) */}
+        {/* Detailed Region Cultural Card (in expanded mode) */}
         {expanded && (
           <div className="lg:col-span-5 h-full min-h-0 flex flex-col">
             {focusedRegionInfo ? (

@@ -21,9 +21,9 @@ export const EthnicCard: React.FC<EthnicCardProps> = ({ group, onSelect }) => {
       onClick={() => onSelect(group.id)}
       className="group text-left museum-card overflow-hidden flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15B8A6] cursor-pointer"
     >
-      {/* Top Visual Crest / Authentic Ethnic Preview */}
+      {/* Top Visual Crest / Authentic Ethnic Preview — Square 1:1 */}
       <div
-        className="relative w-full aspect-[16/10] overflow-hidden flex items-center justify-center"
+        className="relative w-full aspect-square overflow-hidden flex items-center justify-center bg-slate-50"
         style={{
           background: `linear-gradient(135deg, ${group.accentColor}22 0%, #FFF9EA 56%, ${group.secondaryColor}28 100%)`,
         }}
@@ -35,7 +35,7 @@ export const EthnicCard: React.FC<EthnicCardProps> = ({ group, onSelect }) => {
               alt={group.name}
               className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/15 via-transparent to-transparent pointer-events-none" />
           </>
         ) : authenticPreview ? (
           <>
@@ -45,6 +45,10 @@ export const EthnicCard: React.FC<EthnicCardProps> = ({ group, onSelect }) => {
               className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/35 via-transparent to-transparent" />
+            {/* Official Number Index for fallback */}
+            <span className="absolute top-2 left-2.5 z-10 font-display font-black text-xs tabular-nums px-2 py-0.5 rounded-lg bg-white/90 text-slate-800 shadow-xs">
+              {String(group.number).padStart(2, '0')}
+            </span>
           </>
         ) : (
           <>
@@ -59,13 +63,11 @@ export const EthnicCard: React.FC<EthnicCardProps> = ({ group, onSelect }) => {
             >
               <CulturalIcon type={group.culturalSymbol} color={group.accentColor} size={32} />
             </div>
+            <span className="absolute top-2 left-2.5 z-10 font-display font-black text-xs tabular-nums px-2 py-0.5 rounded-lg bg-white/90 text-slate-800 shadow-xs">
+              {String(group.number).padStart(2, '0')}
+            </span>
           </>
         )}
-
-        {/* Official Number Index (01–54) */}
-        <span className="absolute top-2 left-2.5 z-10 font-display font-black text-xs tabular-nums px-2 py-0.5 rounded-lg bg-white/90 text-slate-800 shadow-xs">
-          {String(group.number).padStart(2, '0')}
-        </span>
 
         {/* Ethnic Color Swatch Dots */}
         <div className="absolute bottom-2 right-2.5 z-10 flex items-center gap-1">

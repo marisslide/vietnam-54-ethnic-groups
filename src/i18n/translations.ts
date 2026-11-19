@@ -3,12 +3,12 @@ export type Language = 'vi' | 'en';
 export const translations = {
   // Brand & Global Header
   brandName: {
-    vi: '54 Sắc màu Việt Nam',
-    en: '54 Colours of Vietnam',
+    vi: 'Khám phá 54 dân tộc Việt Nam',
+    en: 'Discover the 54 ethnic groups of Vietnam',
   },
   brandShort: {
-    vi: '54 Sắc màu',
-    en: '54 Colours',
+    vi: '54 Dân tộc',
+    en: '54 Ethnic Groups',
   },
   navHome: {
     vi: 'Trang chủ',
@@ -415,16 +415,16 @@ export const translations = {
     en: 'Digital Learning Resource · Interactive Cultural Museum',
   },
   aboutMainTitle: {
-    vi: '54 SẮC MÀU VIỆT NAM',
-    en: '54 COLOURS OF VIETNAM',
+    vi: 'KHÁM PHÁ 54 DÂN TỘC VIỆT NAM',
+    en: 'DISCOVER THE 54 ETHNIC GROUPS OF VIETNAM',
   },
   aboutSlogan: {
     vi: 'Tôn vinh Đa dạng – Gìn giữ Bản sắc – Tự hào Việt Nam.',
     en: 'Celebrate Diversity – Honour Heritage – Pride in Vietnam.',
   },
   aboutP1: {
-    vi: '54 Sắc màu Việt Nam là bảo tàng số tương tác trực quan được xây dựng dành cho học sinh, giáo viên và những người yêu văn hóa khám phá di sản quý báu của toàn bộ 54 dân tộc anh em được Nhà nước chính thức công nhận.',
-    en: '54 Colours of Vietnam is an interactive digital museum created for pupils, teachers, and culture enthusiasts to explore the rich heritage of all 54 officially recognised ethnic groups in Vietnam.',
+    vi: 'Khám phá 54 dân tộc Việt Nam là bảo tàng số tương tác trực quan được xây dựng dành cho học sinh, giáo viên và những người yêu văn hóa khám phá di sản quý báu của toàn bộ 54 dân tộc anh em được Nhà nước chính thức công nhận.',
+    en: 'Discover the 54 ethnic groups of Vietnam is an interactive digital museum created for pupils, teachers, and culture enthusiasts to explore the rich heritage of all 54 officially recognised ethnic groups in Vietnam.',
   },
   aboutP2: {
     vi: 'Nền tảng học tập cung cấp hành trình khám phá qua 5 chiều kích văn hóa: Nơi sinh sống, Nhà ở truyền thống, Đời sống kinh tế, Văn hóa - Lễ hội và Trang phục truyền thống (Nam & Nữ), tập trung hoàn toàn vào học tập và trải nghiệm thị giác.',

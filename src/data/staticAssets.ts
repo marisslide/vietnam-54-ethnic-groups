@@ -7,4 +7,5 @@ export const STATIC_ASSETS = {
   costumeHmongFemale: '/src/assets/images/costume_hmong_female_1795075735243.jpg',
   houseTraditionalStilt: '/src/assets/images/house_traditional_stilt_1795075734297.jpg',
   cultureFestivalMuseum: '/src/assets/images/culture_festival_museum_1795075735732.jpg',
+  vietnamMap: '/images/vietnam-map.png',
 } as const;
