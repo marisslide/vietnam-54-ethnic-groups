@@ -65,9 +65,9 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
 
   return (
     <div className="museum-card overflow-hidden">
-      <div className="relative w-full aspect-[21/9] min-h-[190px] max-h-[300px] overflow-hidden bg-[#FFF9EA]">
+      <div className="relative w-full overflow-hidden bg-[#FFF9EA]">
         {imageUrl ? (
-          <div className="relative w-full h-full group">
+          <div className="relative w-full aspect-[21/9] min-h-[190px] max-h-[340px] group">
             <img
               src={imageUrl}
               alt={`${title} — ${group.name}`}
@@ -83,8 +83,8 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
             <div className="absolute bottom-3 left-4 right-24 text-white">
-              <p className="font-display font-bold text-sm sm:text-base drop-shadow">{title}</p>
-              <p className="text-xs text-slate-200 line-clamp-1">{caption}</p>
+              <p className="font-display font-bold text-base sm:text-lg drop-shadow">{title}</p>
+              <p className="text-xs sm:text-sm text-slate-200 line-clamp-1">{caption}</p>
             </div>
             <div className="absolute top-3 right-3 flex items-center gap-1.5">
               <button
@@ -97,7 +97,7 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
                     isAiGenerated: false,
                   })
                 }
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-950/70 hover:bg-slate-950/90 text-white text-xs font-semibold backdrop-blur-xs cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-950/70 hover:bg-slate-950/90 text-white text-xs font-semibold backdrop-blur-xs cursor-pointer"
               >
                 <ZoomIn className="w-3.5 h-3.5" />
                 <span>{t('btnEnlarge')}</span>
@@ -105,9 +105,9 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
             </div>
           </div>
         ) : (
-          /* Culturally tailored museum plate */
+          /* Culturally tailored museum plate with prominent avatar and clear text */
           <div
-            className="relative w-full h-full flex items-center justify-between gap-5 px-5 sm:px-7 py-5"
+            className="relative w-full h-full min-h-[180px] sm:min-h-[220px] flex items-center justify-between gap-6 px-6 sm:px-9 py-6 sm:py-8"
             style={{
               background: `linear-gradient(125deg, ${group.accentColor}1E 0%, #FFF9EA 52%, ${group.secondaryColor}24 100%)`,
             }}
@@ -119,26 +119,39 @@ const ExhibitionMediaBox: React.FC<ExhibitionMediaBoxProps> = ({
               idPrefix={`${group.id}-${slot}`}
             />
 
-            <div className="relative z-10 flex items-center gap-4 max-w-2xl">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/95 shadow-md border border-slate-900/8 flex items-center justify-center shrink-0 overflow-hidden">
+            <div className="relative z-10 flex items-center gap-5 sm:gap-7 flex-1 min-w-0">
+              <div
+                onClick={() =>
+                  group.avatarUrl &&
+                  onZoomImage({
+                    src: group.avatarUrl,
+                    title: `${group.name}`,
+                    subtitle: `${t('exhibitionSpacePrefix')} ${group.name}`,
+                    isAiGenerated: false,
+                  })
+                }
+                className={`w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 aspect-square rounded-2xl sm:rounded-3xl bg-white/95 shadow-lg border-2 border-white flex items-center justify-center shrink-0 overflow-hidden ${
+                  group.avatarUrl ? 'cursor-zoom-in hover:scale-105 transition-transform duration-300' : ''
+                }`}
+              >
                 {group.avatarUrl ? (
                   <img
                     src={group.avatarUrl}
                     alt={group.name}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full aspect-square object-cover object-center"
                   />
                 ) : (
-                  <CulturalIcon type={group.culturalSymbol} color={group.accentColor} size={40} />
+                  <CulturalIcon type={group.culturalSymbol} color={group.accentColor} size={54} />
                 )}
               </div>
-              <div className="min-w-0">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-[#0F766E]">
+              <div className="min-w-0 flex-1">
+                <div className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#0F766E]">
                   {t('exhibitionSpacePrefix')} {group.name} {t('exhibitionSpaceSuffix')}
                 </div>
-                <h3 className="font-display font-extrabold text-base sm:text-lg text-slate-900 mt-0.5">
+                <h3 className="font-display font-black text-xl sm:text-2xl lg:text-3xl text-slate-900 mt-1 sm:mt-1.5 leading-snug">
                   {title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 mt-1 line-clamp-2 leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-700 mt-1.5 sm:mt-2 leading-relaxed">
                   {caption}
                 </p>
               </div>
@@ -258,7 +271,7 @@ export const EthnicDetail: React.FC<EthnicDetailProps> = ({
                     isAiGenerated: false,
                   })
                 }
-                className="relative z-10 w-18 h-18 rounded-2xl object-cover object-center shadow-md border-2 border-white cursor-zoom-in shrink-0"
+                className="relative z-10 w-20 h-20 sm:w-22 sm:h-22 aspect-square rounded-2xl object-cover object-center shadow-md border-2 border-white cursor-zoom-in shrink-0"
               />
             ) : authenticPreview ? (
               <img
@@ -268,10 +281,10 @@ export const EthnicDetail: React.FC<EthnicDetailProps> = ({
                   onZoomImage({
                     src: authenticPreview,
                     title: `${group.name}`,
-                    isAiGenerated: true,
+                    isAiGenerated: false,
                   })
                 }
-                className="relative z-10 w-18 h-18 rounded-2xl object-cover object-top shadow-md border-2 border-white cursor-zoom-in shrink-0"
+                className="relative z-10 w-20 h-20 sm:w-22 sm:h-22 aspect-square rounded-2xl object-cover object-top shadow-md border-2 border-white cursor-zoom-in shrink-0"
               />
             ) : (
               <div className="relative z-10 w-16 h-16 rounded-2xl bg-white/95 shadow-md border border-slate-900/8 flex items-center justify-center shrink-0">
