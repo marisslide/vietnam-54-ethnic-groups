@@ -1,12 +1,12 @@
 import { ETHNIC_GROUPS_VI, getEthnicGroupsEn } from '../src/data/ethnicGroups';
 
-console.log('=== VERIFYING ORDER & AVATARS ===');
+console.log('=== VERIFYING ORDER & AVATARS (BATCH 1-30) ===');
 console.log('Total VI groups:', ETHNIC_GROUPS_VI.length);
 const enGroups = getEthnicGroupsEn();
 console.log('Total EN groups:', enGroups.length);
 
-console.log('\nFirst 15 Groups (Custom Avatar Set):');
-for (let i = 0; i < 15; i++) {
+console.log('\n--- First 30 Groups (Custom Avatar Set 01 to 30) ---');
+for (let i = 0; i < 30; i++) {
   const vi = ETHNIC_GROUPS_VI[i];
   const en = enGroups[i];
   console.log(
@@ -14,8 +14,8 @@ for (let i = 0; i < 15; i++) {
   );
 }
 
-console.log('\nNext 5 Groups (from 16 to 20):');
-for (let i = 15; i < 20; i++) {
+console.log('\n--- Groups 31 to 35 (Remaining Groups) ---');
+for (let i = 30; i < 35; i++) {
   const vi = ETHNIC_GROUPS_VI[i];
   const en = enGroups[i];
   console.log(
@@ -23,16 +23,7 @@ for (let i = 15; i < 20; i++) {
   );
 }
 
-console.log('\nLast 3 Groups (52 to 54):');
-for (let i = 51; i < 54; i++) {
-  const vi = ETHNIC_GROUPS_VI[i];
-  const en = enGroups[i];
-  console.log(
-    `#${String(vi.number).padStart(2, '0')}: id=${vi.id} | VI=${vi.name} | EN=${en.name} | avatar=${vi.avatarUrl || 'none'}`
-  );
-}
-
-// Verify every number from 1 to 54 is unique and present
+// Check uniqueness of numbers 1..54
 const viNumbers = ETHNIC_GROUPS_VI.map((g) => g.number).sort((a, b) => a - b);
 const enNumbers = enGroups.map((g) => g.number).sort((a, b) => a - b);
 const all1to54 = Array.from({ length: 54 }, (_, i) => i + 1);
