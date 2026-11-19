@@ -1,28 +1,24 @@
-import React, { useState } from 'react';
-import { ZoomIn, Palette } from 'lucide-react';
+import React from 'react';
+import { Palette } from 'lucide-react';
 import { EthnicGroup, LightboxImage } from '../types/ethnic';
 import { CostumeExhibitionPlate } from './CulturalIcon';
 import { useLanguage } from '../context/LanguageContext';
 
 interface CostumeGalleryProps {
   group: EthnicGroup;
-  onZoomImage: (image: LightboxImage) => void;
+  onZoomImage?: (image: LightboxImage) => void;
 }
 
 interface CostumeColumnProps {
   group: EthnicGroup;
   gender: 'male' | 'female';
-  onZoomImage: (image: LightboxImage) => void;
 }
 
-const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImage }) => {
+const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender }) => {
   const { language, t } = useLanguage();
   const costume = group.costumes[gender];
   const heading = gender === 'male' ? t('costumeMaleHeading') : t('costumeFemaleHeading');
   const genderSub = gender === 'male' ? t('costumeMaleSub') : t('costumeFemaleSub');
-
-  const [imgError, setImgError] = useState(false);
-  const imageUrl = !imgError && costume.imageUrl ? costume.imageUrl : null;
 
   return (
     <section className="museum-card overflow-hidden flex flex-col">
@@ -49,50 +45,9 @@ const CostumeColumn: React.FC<CostumeColumnProps> = ({ group, gender, onZoomImag
         </div>
       </div>
 
-      {/* Portrait Frame */}
-      <div className="relative w-full aspect-[3/4] max-h-[420px] bg-[#FFF9EA] overflow-hidden border-b border-slate-900/8">
-        {imageUrl ? (
-          <div className="relative w-full h-full group bg-gradient-to-b from-[#FFFDF7] to-[#F7F1E1]">
-            <img
-              src={imageUrl}
-              alt={`${heading} — ${group.name}`}
-              onError={() => setImgError(true)}
-              onClick={() =>
-                onZoomImage({
-                  src: imageUrl,
-                  title: `${heading} — ${group.name}`,
-                  subtitle: costume.mainColors,
-                  isAiGenerated: false,
-                })
-              }
-              className="w-full h-full object-contain cursor-zoom-in group-hover:scale-[1.03] transition-transform duration-500"
-            />
-            <div className="absolute top-3 right-3 flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() =>
-                  onZoomImage({
-                    src: imageUrl,
-                    title: `${heading} — ${group.name}`,
-                    subtitle: costume.mainColors,
-                    isAiGenerated: false,
-                  })
-                }
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-950/70 hover:bg-slate-950/90 text-white text-xs font-semibold backdrop-blur-xs transition-colors cursor-pointer"
-                aria-label={t('btnEnlarge')}
-              >
-                <ZoomIn className="w-3.5 h-3.5" />
-                <span>{t('btnEnlarge')}</span>
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="relative w-full h-full flex flex-col">
-            <div className="flex-1 min-h-0">
-              <CostumeExhibitionPlate group={group} gender={gender} />
-            </div>
-          </div>
-        )}
+      {/* Portrait / Garment Model Frame */}
+      <div className="relative w-full aspect-[3/4] max-h-[460px] bg-[#FFF9EA] overflow-hidden border-b border-slate-900/8">
+        <CostumeExhibitionPlate group={group} gender={gender} />
       </div>
 
       {/* Palette Strip */}
@@ -183,8 +138,8 @@ export const CostumeGallery: React.FC<CostumeGalleryProps> = ({ group, onZoomIma
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-5">
-        <CostumeColumn group={group} gender="male" onZoomImage={onZoomImage} />
-        <CostumeColumn group={group} gender="female" onZoomImage={onZoomImage} />
+        <CostumeColumn group={group} gender="male" />
+        <CostumeColumn group={group} gender="female" />
       </div>
     </div>
   );

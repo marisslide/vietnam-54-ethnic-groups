@@ -635,7 +635,7 @@ export const ETHNIC_PART_1: EthnicGroup[] = [
         culturalMeaning: 'Bền chắc, giữ ấm tốt nơi núi cao và thể hiện sự khéo léo của người phụ nữ trong gia đình may tặng.',
         variantNote: 'Hình thức minh họa đại diện nhóm HMông Hoa; trang phục nam HMông Đen, HMông Trắng có biến thể giản dị hơn.',
         imagePrompt: 'High-craft 3D Pixar full-body character portrait of a friendly young adult Vietnamese Hmong man standing head to toe in three-quarter view, wearing dark indigo hemp jacket with intricate colorful geometric red turquoise and gold embroidered collar and cuffs, wide indigo trousers, crimson silk waist sash, traditional silver neck ring, black cloth shoes, soft warm museum gallery studio lighting on soft cream backdrop, no text',
-        imageUrl: STATIC_ASSETS.costumeHmongMale,
+        imageUrl: '',
       },
       female: {
         description: 'Váy xòe xếp nhiều nếp li bằng vải lanh vẽ sáp ong và thêu hoa văn sặc sỡ, áo xẻ cổ thêu dày ở tay và yếm cổ, tạp dề trước bụng, xà cạp quấn chân và khăn đội đầu nhiều lớp.',
@@ -647,7 +647,7 @@ export const ETHNIC_PART_1: EthnicGroup[] = [
         culturalMeaning: 'Mỗi bộ váy áo là tác phẩm nghệ thuật mất nhiều tháng hoàn thiện, biểu tượng cho tài năng và bản sắc vùng cao.',
         variantNote: 'Minh họa chọn biến thể HMông Hoa làm đại diện trực quan; người HMông Trắng nổi bật với váy lanh trắng xếp li, còn HMông Đen thiên về sắc chàm sẫm.',
         imagePrompt: 'High-craft 3D Pixar full-body character portrait of a friendly young adult Vietnamese Hmong woman standing head to toe in three-quarter view, wearing authentic Hmong Hoa dark indigo embroidered blouse with vivid red orange and turquoise geometric brocade sleeves, finely pleated flared indigo and crimson skirt with beeswax batik motifs, embroidered front apron, silver torque necklaces, layered embroidered headscarf, indigo leg wraps, soft warm museum lighting on soft cream backdrop, no text',
-        imageUrl: STATIC_ASSETS.costumeHmongFemale,
+        imageUrl: '',
       },
     },
     referenceSources: STD_REFS,

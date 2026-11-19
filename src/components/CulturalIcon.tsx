@@ -203,14 +203,537 @@ export const EthnicMotifPattern: React.FC<{
   );
 };
 
+export type CostumeArchetype =
+  | 'kinh'
+  | 'thai'
+  | 'muong'
+  | 'hmong'
+  | 'dao'
+  | 'cham'
+  | 'khmer'
+  | 'tay-nung'
+  | 'tay-nguyen'
+  | 'patchwork'
+  | 'hoa';
+
+export function getCostumeArchetype(groupId: string): CostumeArchetype {
+  switch (groupId) {
+    case 'kinh':
+      return 'kinh';
+    case 'thai':
+    case 'khang':
+    case 'la-ha':
+    case 'lao':
+    case 'lu':
+    case 'xinh-mun':
+      return 'thai';
+    case 'muong':
+    case 'tho':
+    case 'chut':
+      return 'muong';
+    case 'hmong':
+    case 'co-lao':
+    case 'pu-peo':
+      return 'hmong';
+    case 'dao':
+    case 'pa-then':
+      return 'dao';
+    case 'cham':
+      return 'cham';
+    case 'kho-me':
+      return 'khmer';
+    case 'tay':
+    case 'nung':
+    case 'giay':
+    case 'bo-y':
+    case 'san-chay':
+      return 'tay-nung';
+    case 'ha-nhi':
+    case 'lo-lo':
+    case 'phu-la':
+    case 'si-la':
+    case 'la-hu':
+    case 'mang':
+    case 'cong':
+    case 'la-chi':
+    case 'kho-mu':
+    case 'o-du':
+      return 'patchwork';
+    case 'hoa':
+    case 'ngai':
+    case 'san-diu':
+      return 'hoa';
+    default:
+      return 'tay-nguyen';
+  }
+}
+
+interface CostumeFigureProps {
+  archetype: CostumeArchetype;
+  c1: string;
+  c2: string;
+  c3: string;
+  c4: string;
+}
+
+const MaleCostumeFigure: React.FC<CostumeFigureProps> = ({ archetype, c1, c2, c3 }) => {
+  return (
+    <g>
+      {/* Head & Neck Base */}
+      <rect x="104" y="69" width="12" height="12" rx="4" fill="#E8B48B" />
+      <circle cx="110" cy="54" r="18" fill="#F5CCA6" />
+      <circle cx="104" cy="54" r="1.8" fill="#1E293B" />
+      <circle cx="116" cy="54" r="1.8" fill="#1E293B" />
+      <path d="M106 62Q110 65.5 114 62" stroke="#9A5B3C" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+
+      {archetype === 'kinh' && (
+        <>
+          {/* Khăn Đóng / Khăn Xếp (multi-tiered folded arcs) */}
+          <path d="M89 48C92 32 128 32 131 48Z" fill="#0F172A" />
+          <path d="M91 38Q110 44 129 38" stroke="#334155" strokeWidth="2.5" fill="none" />
+          <path d="M90 42Q110 48 130 42" stroke="#1E293B" strokeWidth="2.5" fill="none" />
+          <path d="M89 46Q110 52 131 46" stroke="#475569" strokeWidth="2.5" fill="none" />
+          {/* Standing mandarin collar */}
+          <rect x="104" y="69" width="12" height="7" rx="1.5" fill={c1} stroke={c2} strokeWidth="1" />
+          {/* Robe (Áo ngũ thân) with curved right-side overlap */}
+          <path d="M74 84L96 76H124L146 84L154 144L138 148L132 108L134 212H86L88 108L82 148L66 144Z" fill={c1} />
+          <path d="M110 76C120 78 126 84 126 96V144" stroke={c2} strokeWidth="2" fill="none" />
+          <circle cx="126" cy="88" r="2" fill="#FBBF24" />
+          <circle cx="126" cy="104" r="2" fill="#FBBF24" />
+          <circle cx="126" cy="120" r="2" fill="#FBBF24" />
+          <path d="M86 210H134" stroke={c2} strokeWidth="3" />
+          {/* White silk trousers */}
+          <path d="M86 208H134L138 252H118L110 226L102 252H82Z" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1" />
+          {/* Shoes */}
+          <ellipse cx="92" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+          <ellipse cx="128" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'thai' && (
+        <>
+          {/* Indigo flat turban with contrast trim */}
+          <rect x="88" y="42" width="44" height="10" rx="3" fill={c1} />
+          <line x1="88" y1="47" x2="132" y2="47" stroke={c2} strokeWidth="2.5" />
+          {/* Short indigo jacket (Áo chàm ngắn) */}
+          <path d="M74 85L96 77H124L146 85L154 146L138 150L132 110L132 160H88L88 110L82 150L66 146Z" fill={c1} />
+          <line x1="110" y1="77" x2="110" y2="160" stroke={c2} strokeWidth="2.5" />
+          <circle cx="110" cy="94" r="2.2" fill={c3} />
+          <circle cx="110" cy="112" r="2.2" fill={c3} />
+          <circle cx="110" cy="130" r="2.2" fill={c3} />
+          <circle cx="110" cy="148" r="2.2" fill={c3} />
+          <line x1="68" y1="144" x2="82" y2="148" stroke={c2} strokeWidth="3" />
+          <line x1="152" y1="144" x2="138" y2="148" stroke={c2} strokeWidth="3" />
+          {/* Cloth waist sash */}
+          <rect x="84" y="156" width="52" height="10" rx="2" fill={c2} />
+          {/* Trousers */}
+          <path d="M86 164H134L140 252H116L110 196L104 252H80Z" fill={c1} fillOpacity="0.95" />
+          <ellipse cx="92" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+          <ellipse cx="128" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'muong' && (
+        <>
+          {/* Headband with side knot */}
+          <rect x="90" y="43" width="40" height="9" rx="2" fill={c1} />
+          <circle cx="128" cy="48" r="3.5" fill="#FFFFFF" />
+          {/* Open-neck jacket with white inner bib */}
+          <path d="M74 85L96 77H124L146 85L154 146L138 150L132 110L132 162H88L88 110L82 150L66 146Z" fill={c1} />
+          <path d="M102 77L110 96L118 77Z" fill="#FFFFFF" />
+          <line x1="88" y1="160" x2="132" y2="160" stroke={c2} strokeWidth="3" />
+          <rect x="84" y="158" width="52" height="10" rx="2" fill={c2} />
+          {/* Trousers */}
+          <path d="M86 166H134L140 252H116L110 196L104 252H80Z" fill={c1} />
+          <ellipse cx="92" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+          <ellipse cx="128" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'hmong' && (
+        <>
+          {/* Black skullcap with crimson silk pom-pom */}
+          <path d="M92 46C96 34 124 34 128 46Z" fill="#1E293B" />
+          <circle cx="110" cy="33" r="4.5" fill="#EF4444" />
+          {/* Silver neck torque */}
+          <path d="M94 77Q110 88 126 77" stroke="#E2E8F0" strokeWidth="3" fill="none" />
+          {/* Cropped jacket with multi-colored sleeves */}
+          <path d="M75 86L96 78H124L145 86L155 146L140 149L133 110L132 148H88L87 110L80 149L65 146Z" fill={c1} />
+          <line x1="68" y1="142" x2="82" y2="145" stroke={c2} strokeWidth="3" />
+          <line x1="152" y1="142" x2="138" y2="145" stroke={c2} strokeWidth="3" />
+          <line x1="70" y1="136" x2="84" y2="139" stroke={c3} strokeWidth="2.5" />
+          <line x1="150" y1="136" x2="136" y2="139" stroke={c3} strokeWidth="2.5" />
+          {/* Wide embroidered sash */}
+          <rect x="84" y="146" width="52" height="12" rx="2" fill={c2} />
+          <line x1="84" y1="152" x2="136" y2="152" stroke={c3} strokeWidth="2" strokeDasharray="3 2" />
+          {/* Drop-crotch wide trousers (quần đũng thụng) */}
+          <path d="M84 158H136L146 248H122L110 238L98 248H74Z" fill={c1} />
+          <line x1="74" y1="242" x2="98" y2="242" stroke={c2} strokeWidth="2.5" />
+          <line x1="122" y1="242" x2="146" y2="242" stroke={c2} strokeWidth="2.5" />
+          <ellipse cx="90" cy="256" rx="11" ry="5.5" fill="#1E293B" />
+          <ellipse cx="130" cy="256" rx="11" ry="5.5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'dao' && (
+        <>
+          {/* Indigo head wrap with red tassel */}
+          <rect x="88" y="42" width="44" height="10" rx="2" fill={c1} />
+          <line x1="88" y1="48" x2="132" y2="48" stroke="#EF4444" strokeWidth="2.5" />
+          <line x1="128" y1="48" x2="136" y2="62" stroke="#EF4444" strokeWidth="2" />
+          {/* Indigo coat trimmed with red thread & pom-poms */}
+          <path d="M74 85L96 77H124L146 85L154 146L138 150L132 110L134 186H86L88 110L82 150L66 146Z" fill={c1} />
+          <path d="M96 77L110 96V186" stroke="#EF4444" strokeWidth="3" fill="none" />
+          <circle cx="110" cy="98" r="4" fill="#EF4444" />
+          <circle cx="110" cy="116" r="4" fill="#EF4444" />
+          {/* Trousers with red cuff */}
+          <path d="M86 186H134L140 252H116L110 206L104 252H80Z" fill={c1} />
+          <line x1="80" y1="244" x2="104" y2="244" stroke="#EF4444" strokeWidth="2.5" />
+          <line x1="116" y1="244" x2="140" y2="244" stroke="#EF4444" strokeWidth="2.5" />
+          <ellipse cx="92" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+          <ellipse cx="128" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'cham' && (
+        <>
+          {/* White Pakhan turban with red trim and fringes */}
+          <rect x="88" y="42" width="44" height="10" rx="2" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1" />
+          <line x1="88" y1="47" x2="132" y2="47" stroke="#DC2626" strokeWidth="2" />
+          <path d="M87 46L82 60" stroke="#DC2626" strokeWidth="2" />
+          <path d="M133 46L138 60" stroke="#DC2626" strokeWidth="2" />
+          {/* Crisp white knee-length robe (Aw xăm) */}
+          <path d="M74 84L96 76H124L146 84L154 144L138 148L132 108L134 214H86L88 108L82 148L66 144Z" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1.2" />
+          <line x1="110" y1="76" x2="110" y2="152" stroke="#DC2626" strokeWidth="2.5" />
+          {/* Red/gold ceremonial sash */}
+          <rect x="84" y="152" width="52" height="12" rx="2" fill="#DC2626" />
+          <path d="M116 164L124 204L112 204L108 164Z" fill="#FBBF24" />
+          {/* Patterned sarong (Khan kănh) */}
+          <path d="M86 214H134L136 248H84Z" fill={c1} />
+          <line x1="84" y1="242" x2="136" y2="242" stroke="#FBBF24" strokeWidth="3" />
+          <ellipse cx="92" cy="258" rx="12" ry="5.5" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1" />
+          <ellipse cx="128" cy="258" rx="12" ry="5.5" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1" />
+        </>
+      )}
+
+      {archetype === 'khmer' && (
+        <>
+          {/* Silk shirt with gold sash */}
+          <path d="M74 85L96 77H124L146 85L154 146L138 150L132 110L132 158H88L88 110L82 150L66 146Z" fill={c1} />
+          <line x1="96" y1="78" x2="128" y2="156" stroke="#FBBF24" strokeWidth="4" />
+          {/* Sampot Chang Kben */}
+          <path d="M84 158H136L142 226L124 236L110 186L96 236L78 226Z" fill={c2} />
+          <line x1="80" y1="222" x2="140" y2="222" stroke="#FBBF24" strokeWidth="2.5" />
+          <ellipse cx="92" cy="256" rx="10" ry="5" fill="#E8B48B" />
+          <ellipse cx="128" cy="256" rx="10" ry="5" fill="#E8B48B" />
+        </>
+      )}
+
+      {archetype === 'tay-nung' && (
+        <>
+          {/* Indigo 4-pocket jacket */}
+          <path d="M74 85L96 77H124L146 85L154 146L138 150L132 110L132 164H88L88 110L82 150L66 146Z" fill={c1} />
+          <rect x="91" y="98" width="12" height="13" rx="1.5" fill={c1} stroke={c2} strokeWidth="1" />
+          <rect x="117" y="98" width="12" height="13" rx="1.5" fill={c1} stroke={c2} strokeWidth="1" />
+          <rect x="91" y="132" width="13" height="15" rx="1.5" fill={c1} stroke={c2} strokeWidth="1" />
+          <rect x="116" y="132" width="13" height="15" rx="1.5" fill={c1} stroke={c2} strokeWidth="1" />
+          <line x1="110" y1="77" x2="110" y2="164" stroke={c2} strokeWidth="2.5" />
+          <path d="M86 164H134L140 252H116L110 196L104 252H80Z" fill={c1} />
+          <ellipse cx="92" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+          <ellipse cx="128" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'tay-nguyen' && (
+        <>
+          {/* Woven brow-band & feather */}
+          <rect x="88" y="44" width="44" height="8" rx="2" fill={c2} />
+          <line x1="88" y1="48" x2="132" y2="48" stroke="#FBBF24" strokeWidth="2" strokeDasharray="3 2" />
+          <path d="M126 44L132 26L129 44" fill="#EF4444" />
+          {/* Bare arms & V-neck sleeveless vest (Áo khoét nách) */}
+          <path d="M74 85L66 146L78 148L84 94Z" fill="#F5CCA6" />
+          <path d="M146 85L154 146L142 148L136 94Z" fill="#F5CCA6" />
+          <path d="M82 82L97 74H123L138 82L142 148H78Z" fill={c1} />
+          <path d="M97 75L110 106L123 75" stroke={c2} strokeWidth="3.5" fill="none" />
+          <line x1="80" y1="116" x2="140" y2="116" stroke="#FBBF24" strokeWidth="2.5" strokeDasharray="4 2" />
+          <line x1="80" y1="148" x2="140" y2="148" stroke={c2} strokeWidth="3" />
+          {/* Bare legs for loincloth */}
+          <path d="M84 158L82 254H102L106 186Z" fill="#F5CCA6" />
+          <path d="M136 158L138 254H118L114 186Z" fill="#F5CCA6" />
+          {/* Waistband of Loincloth (Kơ-pên) */}
+          <rect x="84" y="148" width="52" height="14" rx="2" fill={c1} stroke={c2} strokeWidth="1.5" />
+          {/* Long Draping Apron Flap (vạt khố) */}
+          <path d="M98 152H122L124 238H96Z" fill={c1} />
+          <line x1="97" y1="184" x2="123" y2="184" stroke={c2} strokeWidth="3" />
+          <line x1="97" y1="200" x2="123" y2="200" stroke="#FBBF24" strokeWidth="2.5" strokeDasharray="3 2" />
+          <line x1="96" y1="216" x2="124" y2="216" stroke={c2} strokeWidth="3" />
+          {/* RED WOOL TASSELS dangling from loincloth flap */}
+          <path d="M96 238V250M102 238V252M108 238V254M114 238V252M120 238V250M124 238V248" stroke="#EF4444" strokeWidth="2.5" strokeLinecap="round" />
+          <ellipse cx="92" cy="256" rx="10" ry="5" fill="#E8B48B" />
+          <ellipse cx="128" cy="256" rx="10" ry="5" fill="#E8B48B" />
+        </>
+      )}
+
+      {(archetype === 'patchwork' || archetype === 'hoa') && (
+        <>
+          {/* Traditional jacket & trousers */}
+          <rect x="90" y="43" width="40" height="9" rx="2" fill={c1} />
+          <path d="M74 85L96 77H124L146 85L154 146L138 150L132 110L132 162H88L88 110L82 150L66 146Z" fill={c1} />
+          <line x1="110" y1="77" x2="110" y2="162" stroke={c2} strokeWidth="2.5" />
+          <line x1="68" y1="144" x2="82" y2="148" stroke={c2} strokeWidth="3" />
+          <line x1="152" y1="144" x2="138" y2="148" stroke={c2} strokeWidth="3" />
+          <rect x="84" y="156" width="52" height="10" rx="2" fill={c2} />
+          <path d="M86 164H134L140 252H116L110 196L104 252H80Z" fill={c1} />
+          <ellipse cx="92" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+          <ellipse cx="128" cy="258" rx="12" ry="5.5" fill="#1E293B" />
+        </>
+      )}
+    </g>
+  );
+};
+
+const FemaleCostumeFigure: React.FC<CostumeFigureProps> = ({ archetype, c1, c2, c3, c4 }) => {
+  return (
+    <g>
+      {/* Head & Neck Base */}
+      <rect x="104" y="69" width="12" height="12" rx="4" fill="#E8B48B" />
+      <circle cx="110" cy="54" r="18" fill="#F6CCA8" />
+      <circle cx="104" cy="54" r="1.8" fill="#1E293B" />
+      <circle cx="116" cy="54" r="1.8" fill="#1E293B" />
+      <path d="M106 63.5Q110 67 114 63.5" stroke="#B45353" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+
+      {archetype === 'kinh' && (
+        <>
+          {/* Hair Bun & Golden Hairpin */}
+          <ellipse cx="110" cy="46" rx="19" ry="12" fill="#0F172A" />
+          <line x1="124" y1="42" x2="136" y2="34" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Silver Torque (Kiềng Bạc) */}
+          <path d="M94 77Q110 88 126 77" stroke="#CBD5E1" strokeWidth="3" fill="none" strokeLinecap="round" />
+          {/* High Collar & Form-Fitting Bodice of Áo Dài */}
+          <rect x="104" y="69" width="12" height="7" rx="1.5" fill={c1} />
+          <path d="M78 85L98 76H122L142 85L150 144L136 147L128 108L125 142H95L92 108L84 147L70 144Z" fill={c1} />
+          <path d="M110 76C118 78 124 82 124 92" stroke={c2} strokeWidth="1.5" fill="none" />
+          {/* White Silk Trousers underneath */}
+          <path d="M86 142H134L142 252H118L110 180L102 252H78Z" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1" />
+          {/* Flowing 2 Tà Áo Dài */}
+          <path d="M94 142H126L134 238H86Z" fill={c1} fillOpacity="0.95" />
+          <path d="M106 170Q110 190 114 210" stroke={c2} strokeWidth="1.5" fill="none" strokeDasharray="3 2" />
+          <ellipse cx="96" cy="256" rx="9" ry="5" fill="#1E293B" />
+          <ellipse cx="124" cy="256" rx="9" ry="5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'thai' && (
+        <>
+          {/* Khăn Piêu with embroidered corner accents */}
+          <path d="M82 46L110 28L138 46L142 66L134 68L132 50L88 50L86 68L78 66Z" fill={c1} />
+          <circle cx="80" cy="62" r="3" fill="#EF4444" />
+          <circle cx="140" cy="62" r="3" fill="#EF4444" />
+          <path d="M86 48L110 32L134 48" stroke={c2} strokeWidth="2.5" fill="none" />
+          {/* Áo Cóm with Silver Butterfly Buttons (khau kẹp) */}
+          <path d="M78 86L98 78H122L142 86L150 142L136 145L130 110L128 142H92L90 110L84 145L70 142Z" fill={c1} />
+          <path d="M107 88L113 94M107 94L113 88" stroke="#E2E8F0" strokeWidth="2" strokeLinecap="round" />
+          <path d="M107 100L113 106M107 106L113 100" stroke="#E2E8F0" strokeWidth="2" strokeLinecap="round" />
+          <path d="M107 112L113 118M107 118L113 112" stroke="#E2E8F0" strokeWidth="2" strokeLinecap="round" />
+          <path d="M107 124L113 130M107 130L113 124" stroke="#E2E8F0" strokeWidth="2" strokeLinecap="round" />
+          <path d="M107 136L113 142M107 142L113 136" stroke="#E2E8F0" strokeWidth="2" strokeLinecap="round" />
+          {/* Emerald Green Waist Sash (xài eo) */}
+          <rect x="86" y="142" width="48" height="12" rx="2" fill="#10B981" />
+          <path d="M86 148L78 184L88 184L90 148Z" fill="#10B981" />
+          {/* Straight Black Floor-Length Skirt (váy đen) */}
+          <path d="M88 154H132L135 252H85Z" fill="#18181B" />
+          <line x1="85" y1="244" x2="135" y2="244" stroke={c2} strokeWidth="4" />
+          <ellipse cx="96" cy="256" rx="9" ry="5" fill="#1E293B" />
+          <ellipse cx="124" cy="256" rx="9" ry="5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'muong' && (
+        <>
+          {/* White Headscarf (khăn trắng Mường) */}
+          <path d="M88 46C92 32 128 32 132 46L134 54L86 54Z" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1" />
+          <path d="M130 50L138 64L134 66L128 54Z" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="0.8" />
+          {/* Áo pắn with V-shaped inner bib (yếm) */}
+          <path d="M78 86L98 78H122L142 86L150 134L136 137L130 108L126 132H94L90 108L84 137L70 134Z" fill={c1} />
+          <path d="M98 78L110 98L122 78Z" fill={c2} />
+          {/* High Woven Brocade Waistband (cạp váy Mường rực rỡ) */}
+          <rect x="88" y="132" width="44" height="24" rx="2" fill={c2} />
+          <line x1="88" y1="140" x2="132" y2="140" stroke="#FBBF24" strokeWidth="2" />
+          <line x1="88" y1="148" x2="132" y2="148" stroke="#10B981" strokeWidth="2" />
+          <path d="M94 144L98 140L102 144L98 148Z" fill="#FBBF24" />
+          <path d="M106 144L110 140L114 144L110 148Z" fill="#FBBF24" />
+          <path d="M118 144L122 140L126 144L122 148Z" fill="#FBBF24" />
+          {/* Straight Black Floor-Length Skirt */}
+          <path d="M88 156H132L135 252H85Z" fill="#18181B" />
+          <ellipse cx="96" cy="256" rx="9" ry="5" fill="#1E293B" />
+          <ellipse cx="124" cy="256" rx="9" ry="5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'hmong' && (
+        <>
+          {/* Circular headdress with bead fringe */}
+          <path d="M86 50C86 28 134 28 134 50L138 60L82 60Z" fill={c2} />
+          <line x1="86" y1="44" x2="134" y2="44" stroke="#FBBF24" strokeWidth="3" />
+          <circle cx="94" cy="54" r="1.5" fill="#E2E8F0" />
+          <circle cx="102" cy="55" r="1.5" fill="#E2E8F0" />
+          <circle cx="110" cy="56" r="1.5" fill="#E2E8F0" />
+          <circle cx="118" cy="55" r="1.5" fill="#E2E8F0" />
+          <circle cx="126" cy="54" r="1.5" fill="#E2E8F0" />
+          {/* Blouse with horizontal banded sleeves */}
+          <path d="M78 86L98 78H122L142 86L150 144L136 147L130 110L128 148H92L90 110L84 147L70 144Z" fill={c1} />
+          <path d="M96 78L110 102L124 78" stroke={c2} strokeWidth="3.5" fill="none" />
+          <line x1="70" y1="122" x2="84" y2="125" stroke={c2} strokeWidth="3" />
+          <line x1="70" y1="130" x2="84" y2="133" stroke="#FBBF24" strokeWidth="2.5" />
+          <line x1="150" y1="122" x2="136" y2="125" stroke={c2} strokeWidth="3" />
+          <line x1="150" y1="130" x2="136" y2="133" stroke="#FBBF24" strokeWidth="2.5" />
+          {/* Broad Flared Pleated Skirt (váy xòe xếp nếp) */}
+          <path d="M86 154H134L170 244H50Z" fill={c1} />
+          <path d="M88 154L64 244M98 154L86 244M110 154L110 244M122 154L134 244M132 154L156 244" stroke={c2} strokeWidth="1" strokeOpacity="0.6" />
+          <path d="M56 226H164" stroke={c2} strokeWidth="6" />
+          <path d="M52 236H168" stroke="#FBBF24" strokeWidth="3" />
+          {/* Front Apron Panel (tạp dề) */}
+          <rect x="100" y="154" width="20" height="74" rx="2" fill={c2} stroke={c3} strokeWidth="1" />
+          {/* Leg wraps (xà cạp) */}
+          <rect x="88" y="244" width="16" height="10" rx="1.5" fill={c1} stroke={c2} strokeWidth="1" />
+          <rect x="116" y="244" width="16" height="10" rx="1.5" fill={c1} stroke={c2} strokeWidth="1" />
+          <ellipse cx="96" cy="256" rx="9" ry="5" fill="#1E293B" />
+          <ellipse cx="124" cy="256" rx="9" ry="5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'dao' && (
+        <>
+          {/* Scarlet Headdress (Khăn đỏ Dao) */}
+          <path d="M74 48L110 16L146 48Z" fill="#DC2626" />
+          <line x1="74" y1="46" x2="146" y2="46" stroke="#FBBF24" strokeWidth="2.5" />
+          <line x1="82" y1="48" x2="82" y2="58" stroke="#E2E8F0" strokeWidth="1.5" />
+          <line x1="96" y1="48" x2="96" y2="58" stroke="#E2E8F0" strokeWidth="1.5" />
+          <line x1="110" y1="48" x2="110" y2="58" stroke="#E2E8F0" strokeWidth="1.5" />
+          <line x1="124" y1="48" x2="124" y2="58" stroke="#E2E8F0" strokeWidth="1.5" />
+          <line x1="138" y1="48" x2="138" y2="58" stroke="#E2E8F0" strokeWidth="1.5" />
+          {/* Coat with 5 Large Red Woolen Pom-poms (quả bông đỏ) */}
+          <path d="M78 86L98 78H122L142 86L150 146L136 149L130 110L130 186H90L90 110L84 149L70 146Z" fill={c1} />
+          <circle cx="102" cy="88" r="6" fill="#EF4444" />
+          <circle cx="118" cy="88" r="6" fill="#EF4444" />
+          <circle cx="98" cy="102" r="6" fill="#EF4444" />
+          <circle cx="122" cy="102" r="6" fill="#EF4444" />
+          <circle cx="110" cy="116" r="6.5" fill="#EF4444" />
+          {/* Trousers with white pine-tree stitches */}
+          <path d="M90 186H130L136 252H116L110 206L104 252H84Z" fill={c1} />
+          <path d="M88 236L92 230L96 236M92 230V242" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M124 236L128 230L132 236M128 230V242" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
+          <ellipse cx="96" cy="256" rx="9" ry="5" fill="#1E293B" />
+          <ellipse cx="124" cy="256" rx="9" ry="5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'cham' && (
+        <>
+          {/* Sheer Veil (Khăn Mat'ram) */}
+          <path d="M86 44C86 28 134 28 134 44L144 116L134 118L130 52L90 52L86 118L76 116Z" fill={c3} fillOpacity="0.75" />
+          {/* Signature Aw tei Long Gown */}
+          <path d="M78 84L98 76H122L142 84L150 144L136 147L128 108L128 226H92L92 108L84 147L70 144Z" fill={c1} />
+          {/* Diagonal Cross-chest Sash */}
+          <path d="M96 78L126 146L118 150L88 82Z" fill={c2} />
+          <line x1="92" y1="80" x2="122" y2="148" stroke="#FBBF24" strokeWidth="2" strokeDasharray="3 2" />
+          {/* Hip Belt & Trailing Tassel */}
+          <rect x="88" y="146" width="44" height="12" rx="2" fill={c2} />
+          <path d="M90 158L88 210L96 210L98 158Z" fill="#FBBF24" />
+          {/* Khan Niếp Gold Hem */}
+          <line x1="92" y1="220" x2="128" y2="220" stroke="#FBBF24" strokeWidth="5" />
+          <ellipse cx="96" cy="256" rx="9" ry="5" fill="#1E293B" />
+          <ellipse cx="124" cy="256" rx="9" ry="5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'khmer' && (
+        <>
+          {/* Golden Sbay Shawl draped across left shoulder */}
+          <path d="M94 77L126 146L134 218L124 218L116 150L86 81Z" fill="#FBBF24" />
+          <path d="M90 79L122 148" stroke="#FFFFFF" strokeWidth="2" strokeDasharray="3 2" />
+          {/* Silk Blouse (Áo tầm vông) */}
+          <path d="M78 85L98 77H122L142 85L150 144L136 147L128 108L128 144H92L92 108L84 147L70 144Z" fill={c1} />
+          {/* Silk Sampot with Gold Brocade */}
+          <path d="M88 146H132L138 252H82Z" fill={c2} />
+          <line x1="82" y1="244" x2="138" y2="244" stroke="#FBBF24" strokeWidth="4" />
+          <circle cx="122" cy="42" r="3.5" fill="#FBBF24" />
+          <ellipse cx="96" cy="256" rx="9" ry="5" fill="#E8B48B" />
+          <ellipse cx="124" cy="256" rx="9" ry="5" fill="#E8B48B" />
+        </>
+      )}
+
+      {archetype === 'tay-nung' && (
+        <>
+          {/* Crow-beak Scarf (Khăn mỏ quạ) */}
+          <path d="M88 44L110 54L132 44L136 56L84 56Z" fill="#0F172A" />
+          {/* Silver Neck Torque (Kiềng bạc) */}
+          <path d="M93 78Q110 90 127 78" stroke="#E2E8F0" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+          {/* 5-panel Indigo Gown */}
+          <path d="M78 85L98 77H122L142 85L150 144L136 147L128 108L128 214H92L92 108L84 147L70 144Z" fill={c1} />
+          {/* Colorful Silk Belt with Tail */}
+          <rect x="88" y="144" width="44" height="10" rx="2" fill={c2} />
+          <path d="M88 154L82 198L90 198L96 154Z" fill={c2} />
+          {/* Trousers underneath */}
+          <path d="M88 214H132L136 252H116L110 220L104 252H84Z" fill={c1} />
+          <ellipse cx="96" cy="256" rx="9" ry="5" fill="#1E293B" />
+          <ellipse cx="124" cy="256" rx="9" ry="5" fill="#1E293B" />
+        </>
+      )}
+
+      {archetype === 'tay-nguyen' && (
+        <>
+          {/* Headband */}
+          <rect x="90" y="44" width="40" height="8" rx="2" fill={c2} />
+          {/* Multi-strand Glass Bead Necklaces (chuỗi cườm) */}
+          <path d="M94 77Q110 88 126 77" stroke="#EF4444" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <path d="M92 83Q110 95 128 83" stroke="#FBBF24" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <path d="M90 89Q110 102 130 89" stroke="#06B6D4" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          {/* Boat-neck Pullover (Áo chui đầu cổ thuyền) */}
+          <path d="M78 85L94 76H126L142 85L150 144L136 147L128 108L128 144H92L92 108L84 147L70 144Z" fill={c1} />
+          <line x1="72" y1="102" x2="148" y2="102" stroke={c2} strokeWidth="3" />
+          <line x1="72" y1="114" x2="148" y2="114" stroke="#FBBF24" strokeWidth="2.5" strokeDasharray="4 2" />
+          <line x1="72" y1="126" x2="148" y2="126" stroke={c2} strokeWidth="3" />
+          {/* Wrapped Tube Skirt (Váy tấm Amiêng) */}
+          <path d="M86 146H134L138 252H82Z" fill={c1} />
+          <line x1="84" y1="184" x2="136" y2="184" stroke={c2} strokeWidth="4" />
+          <line x1="84" y1="198" x2="136" y2="198" stroke="#FBBF24" strokeWidth="3" strokeDasharray="3 2" />
+          <line x1="83" y1="230" x2="137" y2="230" stroke={c2} strokeWidth="6" />
+          <line x1="82" y1="242" x2="138" y2="242" stroke="#FFFFFF" strokeWidth="2.5" strokeDasharray="4 3" />
+          <ellipse cx="94" cy="256" rx="9" ry="5" fill="#F5CCA6" />
+          <ellipse cx="126" cy="256" rx="9" ry="5" fill="#F5CCA6" />
+        </>
+      )}
+
+      {(archetype === 'patchwork' || archetype === 'hoa') && (
+        <>
+          {/* Mosaic Patchwork Jacket / Diagonal Clasp Blouse */}
+          <path d="M86 48C90 32 130 32 134 48Z" fill={c2} />
+          <path d="M78 86L98 78H122L142 86L150 144L136 147L130 110L128 146H92L90 110L84 147L70 144Z" fill={c1} />
+          <path d="M96 78L126 144" stroke={c2} strokeWidth="3" fill="none" />
+          <line x1="70" y1="128" x2="84" y2="131" stroke={c3} strokeWidth="3" />
+          <line x1="150" y1="128" x2="136" y2="131" stroke={c3} strokeWidth="3" />
+          <rect x="88" y="146" width="44" height="12" rx="2" fill={c2} />
+          <path d="M88 156H132L140 252H80Z" fill={c1} />
+          <line x1="82" y1="236" x2="138" y2="236" stroke={c2} strokeWidth="5" />
+          <line x1="80" y1="244" x2="140" y2="244" stroke={c4} strokeWidth="3" />
+          <ellipse cx="96" cy="256" rx="9" ry="5" fill="#1E293B" />
+          <ellipse cx="124" cy="256" rx="9" ry="5" fill="#1E293B" />
+        </>
+      )}
+    </g>
+  );
+};
+
 interface CostumePlaceholderProps {
   group: EthnicGroup;
   gender: 'male' | 'female';
 }
 
 /**
- * Unique museum garment specification plate rendered before an AI portrait is generated.
- * Distinct male vs female silhouette + each ethnic group's real color swatches and motif.
+ * Authentic museum garment specification plate.
+ * Features culturally accurate illustrated silhouettes (cuts, headwear, ornaments, belts)
+ * tailored to each ethnic group's documented traditions.
  */
 export const CostumeExhibitionPlate: React.FC<CostumePlaceholderProps> = ({ group, gender }) => {
   const costume = group.costumes[gender];
@@ -220,6 +743,8 @@ export const CostumeExhibitionPlate: React.FC<CostumePlaceholderProps> = ({ grou
     costume.colorSwatches[2] || '#FFC83D',
     costume.colorSwatches[3] || '#FFF9EA',
   ];
+
+  const archetype = getCostumeArchetype(group.id);
 
   return (
     <div
@@ -245,78 +770,29 @@ export const CostumeExhibitionPlate: React.FC<CostumePlaceholderProps> = ({ grou
         </span>
       </div>
 
-      {/* Bespoke Museum Garment Silhouette Illustration (distinct Male vs Female + Ethnic Colors) */}
+      {/* Bespoke Museum Garment Silhouette Illustration tailored to cultural archetype */}
       <div className="relative z-10 flex-1 w-full flex items-center justify-center my-2">
-        <svg viewBox="0 0 220 290" className="w-full h-full max-h-[250px] drop-shadow-md">
+        <svg viewBox="0 0 220 290" className="w-full h-full max-h-[260px] drop-shadow-md">
           {/* Pedestal glow */}
           <ellipse cx="110" cy="268" rx="64" ry="11" fill={c1} fillOpacity="0.16" />
           <ellipse cx="110" cy="266" rx="48" ry="6.5" fill={c2} fillOpacity="0.18" />
 
           {/* Ornamental sun halo behind character */}
-          <circle cx="110" cy="116" r="72" fill="#FFFFFF" fillOpacity="0.72" stroke={c2} strokeWidth="1.5" strokeDasharray="4 4" />
+          <circle
+            cx="110"
+            cy="116"
+            r="72"
+            fill="#FFFFFF"
+            fillOpacity="0.75"
+            stroke={c2}
+            strokeWidth="1.5"
+            strokeDasharray="4 4"
+          />
 
           {gender === 'male' ? (
-            <g>
-              {/* Head & Traditional Headband/Turban */}
-              <circle cx="110" cy="54" r="19" fill="#F2C6A0" />
-              <path d="M90 47C94 34 126 34 130 47C123 44 97 44 90 47Z" fill={c1} />
-              <path d="M91 45H129" stroke={c2} strokeWidth="3.2" strokeLinecap="round" />
-              {/* Friendly face */}
-              <circle cx="104" cy="54" r="1.8" fill="#1E293B" />
-              <circle cx="116" cy="54" r="1.8" fill="#1E293B" />
-              <path d="M106 62Q110 65.5 114 62" stroke="#9A5B3C" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-              {/* Neck & silver ring/collar */}
-              <rect x="104" y="71" width="12" height="10" rx="4" fill="#E8B48B" />
-              <path d="M95 81Q110 92 125 81" stroke={c4} strokeWidth="3" fill="none" strokeLinecap="round" />
-              {/* Male Jacket / Tunic */}
-              <path d="M72 88L95 79H125L148 88L158 148L142 152L136 112L136 164H84L84 112L78 152L62 148L72 88Z" fill={c1} />
-              {/* Woven brocade chest & cuff trim */}
-              <rect x="106" y="81" width="8" height="82" fill={c2} />
-              <path d="M84 150H136" stroke={c3} strokeWidth="4" />
-              <path d="M64 141L79 145M156 141L141 145" stroke={c2} strokeWidth="4" strokeLinecap="round" />
-              {/* Waist Sash */}
-              <rect x="82" y="156" width="56" height="12" rx="3" fill={c2} />
-              <path d="M118 168L128 205L114 205L108 168Z" fill={c3} />
-              {/* Male Trousers / Ceremonial Lower Garment */}
-              <path d="M84 168H136L142 252H116L110 198L104 252H78L84 168Z" fill={c1} fillOpacity="0.92" />
-              <path d="M80 242H104M116 242H140" stroke={c2} strokeWidth="3.2" />
-              {/* Shoes */}
-              <ellipse cx="91" cy="258" rx="13" ry="6" fill="#1E293B" />
-              <ellipse cx="129" cy="258" rx="13" ry="6" fill="#1E293B" />
-            </g>
+            <MaleCostumeFigure archetype={archetype} c1={c1} c2={c2} c3={c3} c4={c4} />
           ) : (
-            <g>
-              {/* Ornate Female Headdress / Headscarf */}
-              <path d="M86 50C86 28 134 28 134 50L138 64L82 64L86 50Z" fill={c2} />
-              <path d="M89 44C97 34 123 34 131 44" stroke={c3} strokeWidth="3.5" fill="none" strokeLinecap="round" />
-              <circle cx="110" cy="56" r="18" fill="#F6CCA8" />
-              {/* Face */}
-              <circle cx="104" cy="56" r="1.8" fill="#1E293B" />
-              <circle cx="116" cy="56" r="1.8" fill="#1E293B" />
-              <path d="M106 63.5Q110 67 114 63.5" stroke="#B45353" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-              {/* Silver neck torque */}
-              <path d="M94 79Q110 92 126 79" stroke="#E2E8F0" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-              {/* Female Fitted Blouse */}
-              <path d="M77 88L97 79H123L143 88L152 146L137 149L131 112L129 148H91L89 112L83 149L68 146L77 88Z" fill={c1} />
-              {/* Embroidered collar & cuffs */}
-              <path d="M95 81L110 98L125 81" stroke={c2} strokeWidth="4" fill="none" strokeLinejoin="round" />
-              <path d="M70 139L84 142M150 139L136 142" stroke={c3} strokeWidth="4" strokeLinecap="round" />
-              {/* Waistband / Cap Vay / Sash */}
-              <rect x="88" y="144" width="44" height="13" rx="3" fill={c2} />
-              <path d="M90 150.5H130" stroke={c3} strokeWidth="2.5" strokeDasharray="4 3" />
-              {/* Flowing Skirt / Traditional Dress */}
-              <path d="M89 156H131L152 248H68L89 156Z" fill={c1} />
-              {/* Brocade lower bands on skirt */}
-              <path d="M74 220H146" stroke={c2} strokeWidth="8" />
-              <path d="M71 234H149" stroke={c3} strokeWidth="5" />
-              <path d="M69 243H151" stroke={c4} strokeWidth="2.5" strokeDasharray="5 4" />
-              {/* Decorative front apron panel */}
-              <rect x="101" y="157" width="18" height="62" rx="2" fill={c2} fillOpacity="0.9" />
-              <path d="M105 166H115M105 178H115M105 190H115M105 202H115" stroke={c3} strokeWidth="2.2" />
-              {/* Feet / Slippers */}
-              <ellipse cx="97" cy="256" rx="10" ry="5.5" fill="#1E293B" />
-              <ellipse cx="123" cy="256" rx="10" ry="5.5" fill="#1E293B" />
-            </g>
+            <FemaleCostumeFigure archetype={archetype} c1={c1} c2={c2} c3={c3} c4={c4} />
           )}
         </svg>
       </div>

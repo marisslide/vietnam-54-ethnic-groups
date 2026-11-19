@@ -153,11 +153,11 @@ function buildOrderedEthnicGroups(rawList: EthnicGroup[]): EthnicGroup[] {
         costumes: {
           male: {
             ...group.costumes.male,
-            imageUrl: `/images/costumes/${id}-male.jpg`,
+            imageUrl: '',
           },
           female: {
             ...group.costumes.female,
-            imageUrl: `/images/costumes/${id}-female.jpg`,
+            imageUrl: '',
           },
         },
       });
@@ -176,11 +176,11 @@ function buildOrderedEthnicGroups(rawList: EthnicGroup[]): EthnicGroup[] {
         costumes: {
           male: {
             ...group.costumes.male,
-            imageUrl: `/images/costumes/${group.id}-male.jpg`,
+            imageUrl: '',
           },
           female: {
             ...group.costumes.female,
-            imageUrl: `/images/costumes/${group.id}-female.jpg`,
+            imageUrl: '',
           },
         },
       });
