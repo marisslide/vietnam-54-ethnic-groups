@@ -6,7 +6,7 @@ import { ETHNIC_PART_3 } from './parts/part3';
 import { ETHNIC_PART_4 } from './parts/part4';
 import { ETHNIC_PART_5 } from './parts/part5';
 import { ETHNIC_PART_6 } from './parts/part6';
-import { translateEthnicGroupToEn } from './ethnicTranslatorEn';
+import { applyEnglishTranslation } from './translations_en';
 import { Language } from '../i18n/translations';
 
 export const ETHNIC_GROUPS_VI: EthnicGroup[] = [
@@ -23,7 +23,7 @@ let cachedEthnicGroupsEn: EthnicGroup[] | null = null;
 
 export function getEthnicGroupsEn(): EthnicGroup[] {
   if (!cachedEthnicGroupsEn) {
-    cachedEthnicGroupsEn = ETHNIC_GROUPS_VI.map(translateEthnicGroupToEn);
+    cachedEthnicGroupsEn = ETHNIC_GROUPS_VI.map(applyEnglishTranslation);
   }
   return cachedEthnicGroupsEn;
 }

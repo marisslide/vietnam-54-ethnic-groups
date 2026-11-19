@@ -8,10 +8,19 @@ import { HomePage } from './components/HomePage';
 import { EthnicDetail } from './components/EthnicDetail';
 import { AboutView } from './components/AboutView';
 import { ImageViewer } from './components/ImageViewer';
+import { LanguageSelectModal } from './components/LanguageSelectModal';
 import { useLanguage } from './context/LanguageContext';
+import { Language } from './i18n/translations';
 
 export default function App() {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
+  const [hasChosenInitialLanguage, setHasChosenInitialLanguage] = useState<boolean>(() => {
+    try {
+      return Boolean(sessionStorage.getItem('vietnam54_initial_lang_chosen'));
+    } catch {
+      return false;
+    }
+  });
   const [currentView, setCurrentView] = useState<AppView>('intro');
   const [selectedEthnicId, setSelectedEthnicId] = useState<string>('kinh');
   const [previousListView, setPreviousListView] = useState<'home' | 'map' | 'catalog'>('home');
@@ -167,10 +176,27 @@ export default function App() {
     setActiveLanguageFamily(null);
   };
 
+  const handleInitialLanguageSelect = (selectedLang: Language) => {
+    setLanguage(selectedLang);
+    setHasChosenInitialLanguage(true);
+    try {
+      sessionStorage.setItem('vietnam54_initial_lang_chosen', 'true');
+    } catch {
+      // Ignore
+    }
+  };
+
   const selectedEthnic = getEthnicById(selectedEthnicId, language);
 
   return (
     <div className="museum-viewport bg-[#FFF9EA] text-slate-900">
+      {/* Initial Language Selection Modal prior to entering app */}
+      <LanguageSelectModal
+        isOpen={!hasChosenInitialLanguage}
+        currentLanguage={language}
+        onSelectLanguage={handleInitialLanguageSelect}
+      />
+
       {/* Background Audio Player */}
       <audio
         ref={audioRef}
